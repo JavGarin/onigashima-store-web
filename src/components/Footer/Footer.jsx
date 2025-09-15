@@ -74,7 +74,7 @@ const Footer = () => {
             <span>|</span>
             <span onClick={() => openModal(termsOfUse)}>Terms of Use</span>
           </div>
-          <a href="https://github.com/JavGarin" target="_blank" rel="noopener noreferrer" className="github-link">
+          <a href="https://github.com/JavGarin/onigashima-store-web" target="_blank" rel="noopener noreferrer" className="github-link">
             <img src="/src/assets/img/github.png" alt="GitHub" />
           </a>
         </div>
