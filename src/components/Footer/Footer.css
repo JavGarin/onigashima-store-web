@@ -10,10 +10,10 @@
 
 .footer-content {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 25px;
 }
 
 .footer-links {
@@ -32,8 +32,8 @@
 }
 
 .github-link img {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   vertical-align: middle;
   transition: transform 0.3s ease;
 }

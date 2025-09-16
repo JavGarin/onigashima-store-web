@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { supabase } from '../../supabaseClient';
+import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 
-const Login = ({ handleLogin }) => {
+const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { login, signUp } = useAuth();
   
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,32 +21,22 @@ const Login = ({ handleLogin }) => {
     setError('');
 
     try {
-      let authResponse;
       if (isLogin) {
-        // --- Handle Login ---
-        authResponse = await supabase.auth.signInWithPassword({ email, password });
+        await login(email, password);
       } else {
-        // --- Handle Sign Up ---
-        authResponse = await supabase.auth.signUp({ email, password });
-        if (authResponse.data.user && authResponse.data.user.identities && authResponse.data.user.identities.length === 0) {
+        const { data } = await signUp(email, password);
+        if (data.user && data.user.identities && data.user.identities.length === 0) {
             throw new Error("This user already exists. Please try logging in.");
         }
+        if (!data.session) {
+          alert('Sign up successful! Please check your email to confirm your account.');
+          setIsLogin(true); // Switch to login view
+          setLoading(false);
+          return;
+        }
       }
-
-      const { error: authError } = authResponse;
-      if (authError) throw authError;
-
-      // If signup is successful, Supabase sends a confirmation email. 
-      // We can log them in directly for this example.
-      if (authResponse.data.user) {
-        handleLogin(); // Update the app's auth state
-        navigate(from, { replace: true }); // Redirect to the intended page or home
-      } else if (!isLogin) {
-        alert('Sign up successful! Please check your email to confirm your account.');
-        setIsLogin(true); // Switch to login view
-      }
-
-    } catch (error) {
+      navigate(from, { replace: true }); // Redirect to the intended page or home
+    } catch (error) { 
       setError(error.message);
     } finally {
       setLoading(false);

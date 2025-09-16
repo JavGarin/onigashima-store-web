@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useCart } from '../../context/CartContext'; // Import the useCart hook
+import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
-const Navbar = ({ isAuthenticated, handleLogout }) => {
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { cartItems } = useCart(); // Get cart items from context
+  const { cartItems } = useCart();
+  const { isAuthenticated, logout } = useAuth();
 
-  // Calculate total number of items in the cart
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleLogoutClick = () => {
-    handleLogout();
-    toggleMenu();
+  const handleLogoutClick = async () => {
+    try {
+      await logout();
+      toggleMenu();
+    } catch (error) {
+      console.error('Failed to log out', error);
+    }
   };
 
   return (

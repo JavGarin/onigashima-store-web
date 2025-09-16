@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar/Navbar';
 import Home from './pages/Home/Home';
 import Catalog from './pages/Catalog/Catalog';
@@ -8,52 +7,78 @@ import Login from './pages/Login/Login';
 import Footer from './components/Footer/Footer';
 import ProductDetail from './pages/ProductDetail/ProductDetail';
 import Cart from './pages/Cart/Cart';
-import Checkout from './pages/Checkout/Checkout'; // Import Checkout
+import Checkout from './pages/Checkout/Checkout';
+import Lenis from '@studio-freight/lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useAuth } from './context/AuthContext';
 
 // Helper component for protected routes
-const ProtectedRoute = ({ isAuthenticated, children }) => {
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
   const location = useLocation();
+
+  if (loading) {
+    return <div>Loading...</div>; // Or a spinner component
+  }
+
   if (!isAuthenticated) {
-    // Redirect them to the /login page, but save the current location they were
-    // trying to go to. This allows us to send them back after login.
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
   return children;
 };
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    // Init Lenis for smooth scrolling
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
 
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-  };
+    // Connect GSAP ScrollTrigger to Lenis
+    lenis.on('scroll', ScrollTrigger.update);
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-  };
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    gsap.ticker.lagSmoothing(0);
+    gsap.registerPlugin(ScrollTrigger);
+
+    // RAF loop
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    return () => {
+      // Cleanup
+      lenis.destroy();
+    };
+  }, []);
 
   return (
-    <CartProvider>
-      <Router>
-        <Navbar isAuthenticated={isAuthenticated} handleLogout={handleLogout} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="/catalog/:id" element={<ProductDetail />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<Login handleLogin={handleLogin} />} />
-          <Route 
-            path="/checkout" 
-            element={
-              <ProtectedRoute isAuthenticated={isAuthenticated}>
-                <Checkout />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-        <Footer />
-      </Router>
-    </CartProvider>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/catalog" element={<Catalog />} />
+        <Route path="/catalog/:id" element={<ProductDetail />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/login" element={<Login />} />
+        <Route 
+          path="/checkout" 
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+      <Footer />
+    </Router>
   );
 }
 

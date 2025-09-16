@@ -4,12 +4,14 @@
   left: -200px;
   width: 200px;
   height: 600px;
-  background-color: #1a1a1a;
+  background-color: rgba(26, 26, 26, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* For Safari */
   transition: left 0.3s ease-in-out;
   z-index: 1001;
   border-radius: 10px;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-  border: 1px solid #333;
+  border: 1px solid #444;
 }
 
 .sidebar.open {

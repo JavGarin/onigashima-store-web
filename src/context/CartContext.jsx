@@ -1,14 +1,18 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
 
 // 1. Crear el contexto
 const CartContext = createContext();
 
-// 2. Crear un hook personalizado para usar el contexto del carrito más fácilmente
+// Hook personalizado para usar el contexto del carrito
 export const useCart = () => {
-  return useContext(CartContext);
+  const context = useContext(CartContext);
+  if (context === undefined) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
 };
 
-// 3. Crear el componente Provider
 export const CartProvider = ({ children }) => {
   // El estado del carrito, inicializado desde localStorage para persistencia
   const [cartItems, setCartItems] = useState(() => {
@@ -69,4 +73,8 @@ export const CartProvider = ({ children }) => {
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+};
+
+CartProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
