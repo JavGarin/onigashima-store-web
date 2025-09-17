@@ -7,6 +7,7 @@ const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, signUp } = useAuth();
@@ -24,11 +25,8 @@ const Login = () => {
       if (isLogin) {
         await login(email, password);
       } else {
-        const { data } = await signUp(email, password);
-        if (data.user && data.user.identities && data.user.identities.length === 0) {
-            throw new Error("This user already exists. Please try logging in.");
-        }
-        if (!data.session) {
+        const data = await signUp(email, password);
+        if (data && !data.session) {
           alert('Sign up successful! Please check your email to confirm your account.');
           setIsLogin(true); // Switch to login view
           setLoading(false);
@@ -55,13 +53,18 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)} 
             required 
           />
-          <input 
-            type="password" 
-            placeholder="Password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            required 
-          />
+          <div className="password-wrapper">
+            <input 
+              type={showPassword ? "text" : "password"} 
+              placeholder="Password" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              required 
+            />
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="toggle-password">
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
+          </div>
           {error && <p className="auth-error">{error}</p>}
           <button type="submit" disabled={loading}>
             {loading ? 'Processing...' : (isLogin ? 'Login' : 'Sign Up')}
