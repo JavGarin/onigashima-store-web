@@ -4,7 +4,7 @@ Welcome to the Onigashima Store, a modern and dynamic e-commerce web application
 
 ## Screenshot
 
-![Onigashima Store Screenshot](./src/assets/img/onigashimastore.png)
+![Onigashima Store Screenshot](./src/assets/img/onigashimastore.avif)
 
 
 

@@ -118,7 +118,7 @@ const Home = () => {
             {featuredProducts.map((product, index) => (
               <div key={product.id} className={`featured-product-row ${index % 2 !== 0 ? 'reversed' : ''}`}>
                 <div className="featured-product-image">
-                  <img src={product.image_url} alt={product.name} />
+                  <img src={product.image_url} alt={product.name} loading="lazy" />
                 </div>
                 <div className="featured-product-info">
                   <span className="featured-product-tag">{product.tag}</span>

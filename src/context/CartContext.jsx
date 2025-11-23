@@ -25,10 +25,24 @@ export const CartProvider = ({ children }) => {
     }
   });
 
+  const [notification, setNotification] = useState('');
+  const [notificationTimer, setNotificationTimer] = useState(null);
+
   // Guardar en localStorage cada vez que el carrito cambie
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
+
+  const showNotification = (message) => {
+    if (notificationTimer) {
+      clearTimeout(notificationTimer);
+    }
+    setNotification(message);
+    const timer = setTimeout(() => {
+      setNotification('');
+    }, 3000);
+    setNotificationTimer(timer);
+  };
 
   // Función para añadir un producto al carrito
   const addToCart = (product) => {
@@ -44,6 +58,7 @@ export const CartProvider = ({ children }) => {
         return [...prevItems, { ...product, quantity: 1 }];
       }
     });
+    showNotification(`"${product.name}" has been added to the cart!`);
   };
 
   // Función para eliminar un producto del carrito
@@ -70,6 +85,7 @@ export const CartProvider = ({ children }) => {
     addToCart,
     removeFromCart,
     updateQuantity,
+    notification,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

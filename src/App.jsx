@@ -1,17 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
-import Home from './pages/Home/Home';
-import Catalog from './pages/Catalog/Catalog';
-import Login from './pages/Login/Login';
 import Footer from './components/Footer/Footer';
-import ProductDetail from './pages/ProductDetail/ProductDetail';
-import Cart from './pages/Cart/Cart';
-import Checkout from './pages/Checkout/Checkout';
+import Spinner from './components/Spinner/Spinner';
+import AddToCartNotification from './components/AddToCartNotification/AddToCartNotification'; // Import notification component
 import Lenis from '@studio-freight/lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useAuth } from './context/AuthContext';
+
+// Lazy load page components
+const Home = lazy(() => import('./pages/Home/Home'));
+const Catalog = lazy(() => import('./pages/Catalog/Catalog'));
+const ProductDetail = lazy(() => import('./pages/ProductDetail/ProductDetail'));
+const Cart = lazy(() => import('./pages/Cart/Cart'));
+const Login = lazy(() => import('./pages/Login/Login'));
+const Checkout = lazy(() => import('./pages/Checkout/Checkout'));
 
 // Helper component for protected routes
 const ProtectedRoute = ({ children }) => {
@@ -19,7 +23,7 @@ const ProtectedRoute = ({ children }) => {
   const location = useLocation();
 
   if (loading) {
-    return <div>Loading...</div>; // Or a spinner component
+    return <Spinner />; // Use the Spinner component
   }
 
   if (!isAuthenticated) {
@@ -62,21 +66,24 @@ function App() {
   return (
     <Router>
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/catalog" element={<Catalog />} />
-        <Route path="/catalog/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/login" element={<Login />} />
-        <Route 
-          path="/checkout" 
-          element={
-            <ProtectedRoute>
-              <Checkout />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+      <Suspense fallback={<Spinner />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/catalog/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/login" element={<Login />} />
+          <Route 
+            path="/checkout" 
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Suspense>
+      <AddToCartNotification />
       <Footer />
     </Router>
   );

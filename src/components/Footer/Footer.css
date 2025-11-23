@@ -1,54 +1,107 @@
 .footer {
-  background-color: #1a1a1a; /* Darker background */
-  color: #e0e0e0; /* Lighter text */
-  text-align: center;
-  padding: 25px 30px;
+  background-color: #1a1a1a;
+  color: #a0a0a0;
+  padding: 50px 30px;
   position: relative;
   border-top: 1px solid #444;
   font-size: 0.9rem;
 }
 
-.footer-content {
+.footer-main-content {
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 25px;
+  justify-content: space-between;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto 40px auto;
 }
 
-.footer-links {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
+.footer-column {
+  flex: 1;
+  min-width: 200px;
 }
 
-.footer-links span {
+.footer-column h5 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.footer-column a,
+.footer-column span {
+  display: block;
+  color: #a0a0a0;
+  text-decoration: none;
+  margin-bottom: 12px;
   cursor: pointer;
+  transition: color 0.3s ease, padding-left 0.3s ease;
+}
+
+.footer-column a:hover,
+.footer-column span:hover {
+  color: #646cff;
+  padding-left: 5px;
+}
+
+.footer-bottom {
+  border-top: 1px solid #444;
+  padding-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-size: 0.85rem;
+}
+
+.github-link-redesigned {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #a0a0a0;
   transition: color 0.3s ease;
 }
 
-.footer-links span:hover {
-  color: #ff6b6b; /* Anime-like highlight color */
+.github-link-redesigned:hover {
+  color: #ffffff;
 }
 
-.github-link img {
-  width: 30px;
-  height: 30px;
-  vertical-align: middle;
+.github-link-redesigned img {
+  width: 28px;
+  height: 28px;
   transition: transform 0.3s ease;
 }
 
-.github-link:hover img {
-    transform: scale(1.1);
+.github-link-redesigned:hover img {
+  transform: scale(1.1);
 }
 
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  .footer-main-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* --- Scroll to Top (Unchanged) --- */
 .scroll-to-top {
   position: fixed;
   bottom: 30px;
   right: 30px;
   width: 50px;
   height: 50px;
-  background-color: #ff6b6b; /* Match highlight color */
+  background-color: #ff6b6b;
   color: #ffffff;
   border-radius: 50%;
   display: flex;
@@ -60,16 +113,15 @@
   opacity: 0;
   border: none;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s, transform 0.3s;
+  transition: background-color 0.3s, transform 0.3s, visibility 0.3s, opacity 0.3s;
 }
 
 .scroll-to-top:hover {
-    background-color: #ff4f4f;
-    transform: translateY(-3px);
+  background-color: #ff4f4f;
+  transform: translateY(-3px);
 }
 
-
-/* --- Modal Styles --- */
+/* --- Modal Styles (Unchanged) --- */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -107,8 +159,8 @@
 }
 
 .modal-content p {
-    line-height: 1.6;
-    margin-bottom: 15px;
+  line-height: 1.6;
+  margin-bottom: 15px;
 }
 
 .modal-close {

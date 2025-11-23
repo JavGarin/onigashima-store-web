@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import './Footer.css';
+import githubIcon from '../../assets/img/githubwhite.svg';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -67,17 +69,34 @@ const Footer = () => {
   return (
     <>
       <footer className="footer">
-        <div className="footer-content">
-          <p>&copy; {new Date().getFullYear()} Onigashima Store. All rights reserved.</p>
-          <div className="footer-links">
+        <div className="footer-main-content">
+          <div className="footer-column">
+            <h5>Navigation</h5>
+            <Link to="/">Home</Link>
+            <Link to="/catalog">Catalog</Link>
+            <Link to="/cart">Cart</Link>
+          </div>
+          <div className="footer-column">
+            <h5>Support</h5>
+            <a href="#">FAQ</a>
+            <a href="#">Shipping & Returns</a>
+            <a href="#">Contact Us</a>
+          </div>
+          <div className="footer-column">
+            <h5>Legal</h5>
             <span onClick={() => openModal(privacyPolicy)}>Privacy Policy</span>
-            <span>|</span>
             <span onClick={() => openModal(termsOfUse)}>Terms of Use</span>
           </div>
-          <a href="https://github.com/JavGarin/onigashima-store-web" target="_blank" rel="noopener noreferrer" className="github-link">
-            <img src="/src/assets/img/githubwhite.png" alt="GitHub" />
+        </div>
+
+        <div className="footer-bottom">
+          <p>&copy; {new Date().getFullYear()} Onigashima Store. dev Javier Garin - All rights reserved.</p>
+          <a href="https://github.com/JavGarin/onigashima-store-web" target="_blank" rel="noopener noreferrer" className="github-link-redesigned">
+            <img src={githubIcon} alt="GitHub" />
+            <span>View Project on GitHub</span>
           </a>
         </div>
+        
         <div ref={scrollToTopRef} className="scroll-to-top" onClick={handleScrollToTop}>
           ^
         </div>
