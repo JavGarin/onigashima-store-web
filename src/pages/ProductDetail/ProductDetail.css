@@ -73,6 +73,35 @@ body {
   flex-grow: 1;
 }
 
+/* Product Detail Rating Styles */
+.product-detail-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.product-detail-rating .stars {
+  display: flex;
+  gap: 3px;
+}
+
+.product-detail-rating .star {
+  color: #444;
+  font-size: 1.3rem;
+  transition: color 0.2s ease;
+}
+
+.product-detail-rating .star.filled {
+  color: #ffd700;
+  text-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
+}
+
+.product-detail-rating .rating-text {
+  font-size: 0.95rem;
+  color: #aaa;
+}
+
 .product-stock {
   font-size: 0.9rem;
   color: #aaa;

@@ -1,81 +1,185 @@
-.sidebar {
+.navbar {
   position: fixed;
-  top: 20px; /* Adjusted: small separation from top */
-  left: -200px;
-  width: 200px;
-  height: 600px;
-  background-color: rgba(26, 26, 26, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* For Safari */
-  transition: left 0.3s ease-in-out;
-  z-index: 1001;
-  border-radius: 10px;
-  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-  border: 1px solid #444;
-}
-
-.sidebar.open {
-  left: 0;
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 120px 20px 20px; /* Further increased top padding for more space */
-  margin: 0;
-}
-
-.sidebar ul li {
-  padding: 15px 0;
-}
-
-.sidebar ul li a,
-.logout-button {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1.2rem;
-}
-
-.logout-button {
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.menu-toggle {
-  position: fixed;
-  top: 60px; /* Adjusted to align with new sidebar padding */
-  left: 20px;
-  background: none;
-  border: none;
-  color: #ffffff;
-  font-size: 1.5rem;
-  cursor: pointer;
-  z-index: 1002;
-}
-
-/* --- New Cart Link Styles --- */
-.cart-link {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  position: relative;
-}
-
-.cart-badge {
-  background-color: #646cff;
-  color: white;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  background: transparent;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+}
+
+.navbar.scrolled {
+  background: rgba(0, 0, 0, 0.85);
+  height: 70px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.navbar-container {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.5rem;
   font-weight: bold;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: linear-gradient(45deg, #fff, #a0a0a0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
+}
+
+/* Side Menu (Hidden by default) */
+.navbar-links {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 300px;
+  max-width: 80vw;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(15px); /* Glassmorphism */
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  transform: translateX(100%); /* Hidden */
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1002;
+  box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+}
+
+.navbar-links.active {
+  transform: translateX(0); /* Visible */
+}
+
+/* Overlay */
+.side-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.side-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Links inside Side Menu */
+.navbar-links a, .user-greeting {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.navbar-links a:hover {
+  color: #646cff;
+}
+
+/* Close Button */
+.close-btn {
   position: absolute;
-  top: -5px;
-  right: 50px; /* Adjusted position */
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 2rem; /* Larger X */
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.close-btn:hover {
+  transform: rotate(90deg);
+  color: #ff4d4d;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  margin-top: 20px;
+}
+
+.logout-btn:hover {
+  background: #ff4d4d;
+  color: white;
+}
+
+.valid-cart-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Hamburger Menu Icon (Always Visible) */
+.menu-icon {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 6px;
+  z-index: 1001; /* Above navbar background */
+}
+
+.bar {
+  width: 30px;
+  height: 3px;
+  background-color: white;
+  transition: all 0.3s ease;
+  border-radius: 2px;
+}
+
+.menu-icon:hover .bar {
+  background-color: #646cff;
+}
+
+.cart-count-badge {
+  background-color: #ff4d4d;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  margin-left: 5px;
+  vertical-align: top;
+  font-weight: bold;
+  display: inline-block;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 900px) {
+  .navbar-container {
+      width: 95%;
+  }
 }

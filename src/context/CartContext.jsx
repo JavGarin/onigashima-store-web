@@ -79,9 +79,13 @@ export const CartProvider = ({ children }) => {
     });
   };
 
+  // Calcular el número total de items
+  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
   // El valor que será accesible por los componentes hijos
   const value = {
     cartItems,
+    cartCount,
     addToCart,
     removeFromCart,
     updateQuantity,

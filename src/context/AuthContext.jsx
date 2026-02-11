@@ -1,5 +1,6 @@
+// SUPABASE DISABLED - Using mock data for demo purposes
+// import { supabase } from '../supabaseClient';
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient';
 
 const AuthContext = createContext();
 
@@ -17,40 +18,35 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Mock session check
     const getSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      setUser(data.session?.user ?? null);
-      setIsAuthenticated(!!data.session);
-      setLoading(false);
+      // Simulate checking session
+      setTimeout(() => {
+        setUser(null);
+        setIsAuthenticated(false);
+        setLoading(false);
+      }, 500);
     };
 
     getSession();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-      setIsAuthenticated(!!session);
-    });
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
   }, []);
 
   const login = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
-    return data;
+    // Mock login
+    console.log("Mock login attempt", email);
+    return { user: { email }, session: {} };
   };
 
   const signUp = async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
-    if (error) throw error;
-    return data;
+    // Mock signup
+    console.log("Mock signup attempt", email);
+    return { user: { email }, session: {} };
   };
 
   const logout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    // Mock logout
+    setUser(null);
+    setIsAuthenticated(false);
   };
 
   const value = {

@@ -1,15 +1,26 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../../supabaseClient'; // Importar el cliente de Supabase
+// SUPABASE DISABLED - Using mock data for demo purposes
+// import { supabase } from '../../supabaseClient';
+import { getFeaturedProducts } from '../../data/mockProducts';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Home.css';
 import videoBg from '../../assets/video/FLCL.webm';
+import battle1Bg from '../../assets/video/battle1.webm';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Video Playlist Logic
+  const videos = [videoBg, battle1Bg];
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+
+  const handleVideoEnd = () => {
+    setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,6 +42,23 @@ const Home = () => {
     const fetchFeaturedProducts = async () => {
       try {
         setLoading(true);
+        
+        // Simulate network delay for realistic loading experience
+        await new Promise(resolve => setTimeout(resolve, 400));
+
+        // Get featured products from mock data
+        const products = getFeaturedProducts(5);
+        
+        // Add tags to products
+        const tags = ['New', 'Best Seller', 'On Sale', 'Just Arrived', 'Online Exclusive'];
+        const taggedData = products.map((p, i) => ({
+          ...p,
+          tag: tags[i % tags.length]
+        }));
+        
+        setFeaturedProducts(taggedData);
+
+        /* SUPABASE LOGIC - Commented for demo mode
         // Pedimos los 5 productos más recientes
         const { data, error } = await supabase
           .from('products')
@@ -50,6 +78,7 @@ const Home = () => {
           });
           setFeaturedProducts(taggedData);
         }
+        */
       } catch (error) {
         setError(error.message);
       } finally {
@@ -99,7 +128,20 @@ const Home = () => {
   return (
     <>
       <div className="hero-container">
-        <video src={videoBg} autoPlay loop muted />
+        <video 
+          key={`bg-${currentVideoIndex}`}
+          src={videos[currentVideoIndex]} 
+          autoPlay 
+          muted 
+          className="video-bg-blur" 
+        />
+        <video 
+          key={`main-${currentVideoIndex}`}
+          src={videos[currentVideoIndex]} 
+          autoPlay 
+          muted 
+          onEnded={handleVideoEnd}
+        />
         <div className="hero-content">
           <h1>Onigashima Store</h1>
           <p>Your universe of anime collectibles</p>

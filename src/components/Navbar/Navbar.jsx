@@ -1,53 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { cartItems } = useCart();
-  const { isAuthenticated, logout } = useAuth();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { cartCount } = useCart();
+  const { user, logout } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  const handleLogoutClick = async () => {
-    try {
-      await logout();
-      toggleMenu();
-    } catch (error) {
-      console.error('Failed to log out', error);
-    }
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
-    <>
-      <button className="menu-toggle" onClick={toggleMenu}>
-        {isOpen ? 'Close' : 'Menu'}
-      </button>
-      <nav className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <ul>
-          <li><Link to="/" onClick={toggleMenu}>Home</Link></li>
-          <li><Link to="/catalog" onClick={toggleMenu}>Catalog</Link></li>
-          {isAuthenticated ? (
-            <li><button onClick={handleLogoutClick} className="logout-button">Logout</button></li>
+    <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
+      <div className={`side-menu-overlay ${isMobileMenuOpen ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+      
+      <div className="navbar-container">
+        <Link to="/" className="navbar-logo">
+          {/* Logo removed */}
+        </Link>
+        
+        <div className={`navbar-links ${isMobileMenuOpen ? 'active' : ''} side-menu`}>
+          <button className="close-btn" onClick={() => setIsMobileMenuOpen(false)}>
+            &times;
+          </button>
+
+          <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+          <Link to="/catalog" onClick={() => setIsMobileMenuOpen(false)}>Catalog</Link>
+          
+          {user ? (
+             <span className="user-greeting">Hello, {user.email}</span>
           ) : (
-            <li><Link to="/login" onClick={toggleMenu}>Login</Link></li>
+             <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>Login</Link>
           )}
-          <li className="cart-link-container">
-            <Link to="/cart" className="cart-link" onClick={toggleMenu}>
-              <span className="cart-icon">🛒</span>
-              <span>Cart</span>
-              {totalItems > 0 && <span className="cart-badge">{totalItems}</span>}
-            </Link>
-          </li>
-        </ul>
-      </nav>
-    </>
+
+           <Link to="/cart" className="valid-cart-icon" onClick={() => setIsMobileMenuOpen(false)}>
+              Cart
+              {cartCount > 0 && <span className="cart-count-badge">{cartCount}</span>}
+           </Link>
+           
+           {user && (
+              <button onClick={() => { logout(); setIsMobileMenuOpen(false); }} className="logout-btn">Logout</button>
+           )}
+        </div>
+
+        <div className="menu-icon" onClick={toggleMobileMenu}>
+          <div className="bar"></div>
+          <div className="bar"></div>
+          <div className="bar"></div>
+        </div>
+      </div>
+    </nav>
   );
 };
 

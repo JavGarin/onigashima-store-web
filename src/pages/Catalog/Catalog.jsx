@@ -1,48 +1,38 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../../supabaseClient';
+// SUPABASE DISABLED - Using mock data for demo purposes
+// import { supabase } from '../../supabaseClient';
+import { getAllProducts, getAllCategories } from '../../data/mockProducts';
 import { useCart } from '../../context/CartContext';
 import { gsap } from 'gsap';
 import Spinner from '../../components/Spinner/Spinner';
 import './Catalog.css';
 
-const PRODUCTS_PER_PAGE = 8;
-
 const Catalog = () => {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { addToCart } = useCart();
   const comp = useRef(null);
-
-  const [currentPage, setCurrentPage] = useState(0);
-  const [productCount, setProductCount] = useState(0);
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
       
       try {
-        const from = currentPage * PRODUCTS_PER_PAGE;
-        const to = from + PRODUCTS_PER_PAGE - 1;
+        // Simulate network delay for realistic loading experience
+        await new Promise(resolve => setTimeout(resolve, 300));
 
-        // Get the total count of products
-        const { count, error: countError } = await supabase
-          .from('products')
-          .select('*', { count: 'exact', head: true });
+        // Get all products and categories
+        const allProducts = getAllProducts();
+        const allCats = getAllCategories();
 
-        if (countError) throw countError;
-        setProductCount(count);
-        
-        // Fetch the paginated data
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .order('created_at', { ascending: false })
-          .range(from, to);
-
-        if (error) throw error;
-        if (data) setProducts(data);
+        setProducts(allProducts);
+        setFilteredProducts(allProducts);
+        setCategories(allCats);
 
       } catch (error) {
         setError(error.message);
@@ -52,7 +42,16 @@ const Catalog = () => {
     };
 
     fetchProducts();
-  }, [currentPage]);
+  }, []);
+
+  // Filter products when selectedCategory changes
+  useEffect(() => {
+    if (selectedCategory === 'All') {
+      setFilteredProducts(products);
+    } else {
+      setFilteredProducts(products.filter(p => p.category === selectedCategory));
+    }
+  }, [selectedCategory, products]);
 
   useLayoutEffect(() => {
     if (error || loading) return;
@@ -60,42 +59,17 @@ const Catalog = () => {
     const ctx = gsap.context(() => {
       gsap.set('.catalog-content, .product-grid', { autoAlpha: 1 });
       
-      const tl = gsap.timeline();
+      // Animate products when filter changes
+      gsap.fromTo('.product-card', 
+        { autoAlpha: 0, y: 20 },
+        { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.05, overwrite: 'auto' }
+      );
       
-      // Animate title and intro once
-      if (currentPage === 0) {
-        tl.from('.catalog-container h2, .catalog-intro', {
-            autoAlpha: 0,
-            y: 30,
-            duration: 0.5,
-            stagger: 0.2,
-          });
-      }
-      
-      // Animate product cards every time products change
-      gsap.from('.product-card', {
-        autoAlpha: 0,
-        y: 30,
-        duration: 0.5,
-        stagger: 0.1,
-      });
-
     }, comp);
 
     return () => ctx.revert();
 
-  }, [loading, error, products]);
-
-  const handleNextPage = () => {
-    setCurrentPage(prev => prev + 1);
-  };
-
-  const handlePrevPage = () => {
-    setCurrentPage(prev => prev - 1);
-  };
-
-  const isPrevDisabled = currentPage === 0;
-  const isNextDisabled = (currentPage + 1) * PRODUCTS_PER_PAGE >= productCount;
+  }, [loading, error, filteredProducts]); // Re-run animation when filteredProducts changes
 
   if (error) {
     return <div className="catalog-container"><p>Error: {error}</p></div>;
@@ -105,42 +79,61 @@ const Catalog = () => {
     <div className="catalog-container" ref={comp}>
       <div className="catalog-content" style={{ visibility: loading && !products.length ? 'hidden' : 'visible' }}>
         <h2>Our Catalog</h2>
-        <p className="catalog-intro">Explore our collection of anime treasures. Find figures, apparel, and more!</p>
+        <p className="catalog-intro">Explore our full collection of anime treasures.</p>
+        
+        {/* Category Filter Bar */}
+        <div className="category-filter">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
+              onClick={() => setSelectedCategory(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
         
         {loading && <Spinner />}
         
         {!loading && (
-          <>
-            <div className="product-grid">
-              {products.map(product => (
-                <div key={product.id} className="product-card">
-                  <Link to={`/catalog/${product.id}`} className="product-link">
-                    <div className="product-image-container">
-                      <img src={product.image_url} alt={product.name} loading="lazy" />
-                      <span className="product-card-category">{product.category}</span>
+          <div className="product-grid">
+            {filteredProducts.map(product => (
+              <div key={product.id} className="product-card">
+                <Link to={`/catalog/${product.id}`} className="product-link">
+                  <div className="product-image-container">
+                    <img src={product.image_url} alt={product.name} loading="lazy" />
+                    <span className="product-card-category">{product.category}</span>
+                    {product.tags && product.tags.length > 0 && (
+                      <span className="product-card-tag">{product.tags[0]}</span>
+                    )}
+                  </div>
+                  <div className="product-card-info">
+                    <h3>{product.name}</h3>
+                    <div className="product-card-rating">
+                      <div className="stars">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className={i < Math.floor(product.rating) ? 'star filled' : 'star'}>
+                            ★
+                          </span>
+                        ))}
+                      </div>
+                      <span className="rating-text">
+                        {product.rating} ({product.reviews} reviews)
+                      </span>
                     </div>
-                    <div className="product-card-info">
-                      <h3>{product.name}</h3>
-                      <p className="product-card-price">${product.price}</p>
-                    </div>
-                  </Link>
-                  <button className="btn liquid" onClick={() => addToCart(product)}>
-                    Add to Cart
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            <div className="pagination-controls">
-              <button onClick={handlePrevPage} disabled={isPrevDisabled}>
-                Previous
-              </button>
-              <span>Page {currentPage + 1}</span>
-              <button onClick={handleNextPage} disabled={isNextDisabled}>
-                Next
-              </button>
-            </div>
-          </>
+                    <p className="product-card-price">${product.price}</p>
+                  </div>
+                </Link>
+                <button className="btn liquid" onClick={() => addToCart(product)}>
+                  Add to Cart
+                </button>
+              </div>
+            ))}
+            {filteredProducts.length === 0 && (
+              <p className="no-products-msg">No products found in this category.</p>
+            )}
+          </div>
         )}
       </div>
     </div>

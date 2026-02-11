@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { supabase } from '../../supabaseClient';
+// SUPABASE DISABLED - Using mock data for demo purposes
+// import { supabase } from '../../supabaseClient';
+import { getProductById } from '../../data/mockProducts';
 import { useCart } from '../../context/CartContext'; // Import useCart
 import './ProductDetail.css';
 
@@ -15,6 +17,20 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        
+        // Simulate network delay for realistic loading experience
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        // Get product from mock data
+        const foundProduct = getProductById(id);
+
+        if (foundProduct) {
+          setProduct(foundProduct);
+        } else {
+          throw new Error(`Product with ID ${id} does not exist.`);
+        }
+
+        /* SUPABASE LOGIC - Commented for demo mode
         const { data, error } = await supabase
           .from('products')
           .select('*')
@@ -30,6 +46,7 @@ const ProductDetail = () => {
         } else {
           throw new Error(`Product with ID ${id} does not exist.`);
         }
+        */
 
       } catch (error) {
         setError(error.message);
@@ -64,6 +81,18 @@ const ProductDetail = () => {
         <div className="product-detail-info">
           <span className="product-category">{product.category}</span>
           <h1>{product.name}</h1>
+          <div className="product-detail-rating">
+            <div className="stars">
+              {[...Array(5)].map((_, i) => (
+                <span key={i} className={i < Math.floor(product.rating) ? 'star filled' : 'star'}>
+                  ★
+                </span>
+              ))}
+            </div>
+            <span className="rating-text">
+              {product.rating} ({product.reviews} reviews)
+            </span>
+          </div>
           <p className="product-description">{product.description}</p>
           <p className="product-stock">In Stock: {product.stock}</p>
           <div className="product-purchase-section">
