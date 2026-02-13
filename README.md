@@ -1,52 +1,48 @@
-# Onigashima Store - Anime Collectibles Web App
+# Onigashima Store - E-commerce de Coleccionables de Anime
 
-Welcome to the Onigashima Store, a modern and dynamic e-commerce web application built for anime enthusiasts. This project showcases a seamless user experience with smooth scrolling, fluid animations, and a complete set of online store functionalities, from browsing a catalog to a secure checkout process.
+Bienvenido a **Onigashima Store**, una aplicación web de comercio electrónico moderna y dinámica diseñada especialmente para entusiastas del anime. Este proyecto destaca por ofrecer una experiencia de usuario fluida con animaciones profesionales y una funcionalidad completa de tienda online.
 
-## Screenshot
+## Captura de Pantalla
 
-![Onigashima Store Screenshot](./src/assets/img/onigashimastore.avif)
+![Onigashima Store Screenshot](./src/assets/img/onigashima-store.avif)
 
+## Características Principales
 
+- **UI/UX Moderna:** Interfaz elegante con estética "Manga Pastel Dreams", utilizando efectos de glassmorphism y un diseño premium.
+- **Navegación Móvil Enriquecida:** Menú lateral (sidebar) en dispositivos móviles que incluye información de soporte al cliente, redes sociales y acceso rápido.
+- **Scroll Suave y Fluido:** Integración con `@studio-freight/lenis` para una navegación sin saltos.
+- **Animaciones Dinámicas:** Potenciado por **GSAP** para traer el contenido a la vida mediante scroll-trigger animations.
+- **Botón de Carrito Optimizado:** Diseño destacado con ícono descriptivo y contraste mejorado para una mejor usabilidad.
+- **Accesibilidad:** Implementación de etiquetas ARIA y navegación por teclado para asegurar que la tienda sea inclusiva.
+- **Diseño Responsivo Compacto:** Footer y Navbar optimizados para ocupar el mínimo espacio vertical en móviles, manteniendo toda la información relevante.
+- **Autenticación de Usuario:** Gestión segura de inicio de sesión y registro mediante Supabase Auth.
+- **Gestión de Carrito:** Carrito de compras persistente utilizando React Context y `localStorage`.
 
-## Key Features
+## Notas de Desarrollo y Operación
 
-- **Modern UI/UX:** A sleek, dark-themed interface with professional, smooth animations.
-- **Smooth Scrolling:** Integrated with `@studio-freight/lenis` for a fluid browsing experience.
-- **Dynamic Animations:** Scroll-triggered animations powered by GSAP (GreenSock Animation Platform) to bring content to life.
-- **User Authentication:** Secure sign-up and login functionality managed with Supabase Auth.
-- **Product Catalog:** Browse a grid of available anime figures and products fetched from a Supabase database.
-- **Shopping Cart:** A fully persistent shopping cart using React Context and `localStorage`.
-- **Protected Routes:** A secure checkout page accessible only to authenticated users.
-- **Responsive Design:** A mobile-first approach ensuring the store looks great on all devices.
+> [!IMPORTANT]
+> **Estado de la Base de Datos:** Actualmente, el código relacionado con la obtención de productos desde la base de datos de **Supabase** se encuentra comentado para reducir costos operativos. La aplicación utiliza un conjunto de datos locales para la demostración del catálogo. La funcionalidad de autenticación de Supabase sigue activa para las rutas protegidas.
 
-## Tech Stack
-
-This project was built using a modern frontend stack:
+## Tecnologías Utilizadas
 
 - **Framework:** [React](https://reactjs.org/)
-- **Build Tool:** [Vite](https://vitejs.dev/)
-- **Backend as a Service (BaaS):** [Supabase](https://supabase.io/) for database and authentication.
-- **Routing:** [React Router](https://reactrouter.com/)
-- **Animation:**
-  - [GSAP (GreenSock Animation Platform)](https://greensock.com/gsap/)
-  - [@studio-freight/lenis](https://github.com/darkroomengineering/lenis) for smooth scrolling.
-- **State Management:** React Context API (for Cart and Auth state).
-- **Styling:** Plain CSS with modern features like glassmorphism (`backdrop-filter`).
+- **Herramienta de Construcción:** [Vite](https://vitejs.dev/)
+- **BaaS (Backend as a Service):** [Supabase](https://supabase.io/) (Auth activo, DB de productos en modo local).
+- **Animación:** [GSAP](https://greensock.com/gsap/) y [Lenis](https://github.com/darkroomengineering/lenis).
+- **Estilos:** CSS Vanilla con variables modernas y diseño responsivo.
 
-## Project Structure
-
-The `src` folder is organized to maintain a clean and scalable codebase:
+## Estructura del Proyecto
 
 ```
 src/
-├── assets/         # Static files like images, videos, and global styles
-├── components/     # Reusable React components (Navbar, Footer, Spinner, etc.)
-├── context/        # React Context providers (AuthContext, CartContext)
-├── pages/          # Page components corresponding to routes (Home, Catalog, Login, etc.)
-├── App.jsx         # Main application component with routing structure
-├── main.jsx        # Entry point of the application
-└── supabaseClient.js # Supabase client initialization
+├── assets/         # Archivos estáticos: imágenes, videos y estilos globales.
+├── components/     # Componentes reutilizables (Navbar, Footer, Spinner, etc.).
+├── context/        # Proveedores de contexto (AuthContext, CartContext).
+├── pages/          # Páginas de la aplicación (Home, Catalog, Login, etc.).
+├── App.jsx         # Configuración principal y rutas.
+└── supabaseClient.js # Inicialización del cliente de Supabase.
 ```
 
-## Author project
-JavGarin
+---
+by JavGarin
+Chile
