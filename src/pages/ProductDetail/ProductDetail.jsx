@@ -59,28 +59,33 @@ const ProductDetail = () => {
   }, [id]);
 
   if (loading) {
-    return <div className="product-detail-container"><p>Loading product...</p></div>;
+    return <div className="container-section product-detail-loading"><p>Loading product...</p></div>;
   }
 
   if (error || !product) {
     return (
-      <div className="product-detail-container not-found">
-        <h2>Product Not Found</h2>
-        <p>{error}</p>
-        <Link to="/catalog" className="btn-back">Back to Catalog</Link>
+      <div className="container-section product-detail-not-found">
+        <div className="not-found-content">
+          <h2>Product Not Found</h2>
+          <p>{error}</p>
+          <Link to="/catalog" className="btn-base btn-primary">Back to Catalog</Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="product-detail-container">
+    <div className="container-section product-detail-section">
       <div className="product-detail-card">
         <div className="product-detail-image">
-          <img src={product.image_url} alt={product.name} />
+          <img src={product.image_url} alt={product.name} loading="lazy" />
         </div>
         <div className="product-detail-info">
-          <span className="product-category">{product.category}</span>
-          <h1>{product.name}</h1>
+          <div className="product-detail-head">
+            <span className="product-category-tag">{product.category}</span>
+            <h1>{product.name}</h1>
+          </div>
+
           <div className="product-detail-rating">
             <div className="stars">
               {[...Array(5)].map((_, i) => (
@@ -93,16 +98,28 @@ const ProductDetail = () => {
               {product.rating} ({product.reviews} reviews)
             </span>
           </div>
+
           <p className="product-description">{product.description}</p>
-          <p className="product-stock">In Stock: {product.stock}</p>
+          
+          <div className="product-detail-meta">
+            <p className="product-stock-status">
+              <span className="dot"></span> In Stock: {product.stock} units
+            </p>
+          </div>
+
           <div className="product-purchase-section">
-            <span className="product-price">${product.price}</span>
-            {/* Update onClick to use addToCart */}
-            <button className="btn liquid" onClick={() => addToCart(product)}>
+            <div className="product-price-wrapper">
+              <span className="price-label">Price</span>
+              <span className="product-price-amount">${product.price}</span>
+            </div>
+            <button className="btn-base btn-primary product-add-btn" onClick={() => addToCart(product)}>
               Add to Cart
             </button>
           </div>
-           <Link to="/catalog" className="btn-back"> &larr; Back to Catalog</Link>
+          
+          <Link to="/catalog" className="product-detail-back-link">
+            &larr; Back to Catalog
+          </Link>
         </div>
       </div>
     </div>

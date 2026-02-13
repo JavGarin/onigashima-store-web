@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
+import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -42,31 +43,40 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="container-section login-container">
       <div className="login-form">
-        <h2>{isLogin ? 'Login' : 'Sign Up'}</h2>
+        <img src={logoOnigashima} alt="Onigashima Store Logo" className="login-logo" />
+        <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
         <form onSubmit={handleSubmit}>
-          <input 
-            type="email" 
-            placeholder="Email" 
-            value={email} 
-            onChange={(e) => setEmail(e.target.value)} 
-            required 
-          />
-          <div className="password-wrapper">
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
             <input 
-              type={showPassword ? "text" : "password"} 
-              placeholder="Password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
+              id="email"
+              type="email" 
+              placeholder="Enter your email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
               required 
             />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="toggle-password">
-              {showPassword ? 'Hide' : 'Show'}
-            </button>
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <div className="password-wrapper">
+              <input 
+                id="password"
+                type={showPassword ? "text" : "password"} 
+                placeholder="Enter your password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                required 
+              />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="toggle-password">
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
           </div>
           {error && <p className="auth-error">{error}</p>}
-          <button type="submit" disabled={loading}>
+          <button type="submit" className="btn-base btn-primary login-submit-btn" disabled={loading}>
             {loading ? 'Processing...' : (isLogin ? 'Login' : 'Sign Up')}
           </button>
         </form>

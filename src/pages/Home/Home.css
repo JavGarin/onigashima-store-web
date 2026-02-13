@@ -7,271 +7,73 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background-color: #000; /* Fondo negro para letterboxing */
-  z-index: 1; /* Establece contexto de apilamiento */
+  background-color: var(--bg-primary);
+  z-index: 1;
 }
 
 .hero-container video {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* Asegura que el video no se corte */
+  object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1; /* Encima del fondo del contenedor */
+  z-index: 1;
 }
 
-.hero-container .video-bg-blur {
-  object-fit: cover; /* Cubre todo el fondo */
-  filter: blur(20px); /* Desenfoque fuerte */
-  opacity: 0.6; /* Oscurecer */
-  z-index: 0; /* Detrás del video principal */
-}
-
-/* Overlay oscuro para mejorar legibilidad del texto */
+/* Premium Gradient Overlay para accesibilidad */
 .hero-container::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    z-index: 2; /* Encima del video */
-    pointer-events: none; /* Permitir clicks a través si fuera necesario */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-overlay);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-logo {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 120px;
+  height: auto;
+  z-index: 4;
+  filter: drop-shadow(0 4px 12px rgba(255, 183, 197, 0.4));
+  transition: transform var(--transition-normal);
+}
+
+.hero-logo:hover {
+  transform: scale(1.05);
 }
 
 .hero-content {
   text-align: center;
-  color: #ffffff;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.7);
-  position: relative; /* Para z-index */
-  z-index: 3; /* Encima del overlay */
+  color: var(--text-primary);
+  position: relative;
+  z-index: 3;
+  padding: 40px 20px 0;
+  max-width: 800px;
 }
 
 .hero-content h1 {
-    font-size: 4rem;
-    margin-bottom: 0.5rem;
+  font-size: clamp(2.5rem, 8vw, var(--font-size-4xl));
+  margin-bottom: 1rem;
+  font-weight: 800;
+  text-shadow: 0 2px 20px rgba(212, 197, 249, 0.3);
 }
 
 .hero-content p {
-    font-size: 1.5rem;
-    color: #ddd;
-
+  font-size: clamp(1.1rem, 4vw, var(--font-size-xl));
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 2.5rem;
 }
 
-
-/* --- Featured Products Section --- */
-.featured-products {
-    background-color: #121212; /* Even darker, more modern background */
-    padding: 80px 20px; /* More vertical padding, some horizontal for smaller screens */
-    color: white;
-}
-
-.featured-title {
-    text-align: center;
-    font-size: 2.8rem;
-    margin-bottom: 60px;
-    color: #fff;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-.featured-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 60px; /* Increased space between product rows */
-    max-width: 1200px; /* Reduced content width */
-    margin: 0 auto; /* Center the grid */
-}
-
-.featured-product-row {
-    display: flex;
-    align-items: stretch; /* Make columns equal height */
-    width: 100%;
-    height: 480px; /* Fixed height for rectangular shape */
-    background: linear-gradient(145deg, #2e2e2e, #1f1f1f); /* Subtle gradient */
-    overflow: hidden;
-    border-radius: 16px; /* Rounded corners for the modern card look */
-    border: 1px solid #333;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.featured-product-row:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-}
-
-/* Estilo para las filas impares (imagen a la derecha) */
-.featured-product-row.reversed {
-    flex-direction: row-reverse;
-    background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-}
-
-.featured-product-image {
-    flex: 1 1 50%;
-    min-width: 50%;
-    overflow: hidden; /* Hide image overflow */
-}
-
-.featured-product-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease-in-out; /* Smoother zoom */
-}
-
-.featured-product-row:hover .featured-product-image img {
-    transform: scale(1.05); /* Zoom effect on row hover */
-}
-
-.featured-product-info {
-    flex: 1 1 50%;
-    padding: 40px 60px; /* Generous padding */
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.featured-product-tag {
-    background: none;
-    border: 1px solid #646cff;
-    color: #646cff;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    align-self: flex-start;
-    margin-bottom: 25px;
-}
-
-.featured-product-info h3 {
-    font-size: 2.3rem; /* Adjusted font size */
-    margin: 0 0 20px 0;
-    font-weight: 600;
-    line-height: 1.2;
-}
-
-.featured-product-description {
-    font-size: 1.1rem;
-    line-height: 1.7;
-    color: #b3b3b3; /* Lighter gray for better contrast */
-    margin-bottom: 35px;
-    flex-grow: 1; /* Allow description to fill space */
-}
-
-.featured-product-purchase {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: auto; /* Push to bottom */
-    border-top: 1px solid #444;
-    padding-top: 25px;
-}
-
-.featured-product-price {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #646cff;
-}
-
-/* --- Estilos del Botón (copiados de Catalog.css para consistencia) --- */
-.btn {
-  position: relative;
-  padding: 1rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
-  background: none;
-  border: 2px solid #646cff;
-  border-radius: 8px;
-  cursor: pointer;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  text-decoration: none; /* Para los <Link> */
-  text-align: center;
-}
-
-.liquid {
-  background: linear-gradient(#646cff 0 0) no-repeat calc(200% - var(--p, 0%))
-    100% / 200% var(--p, 0.2em);
-  transition: 0.3s var(--t, 0s),
-    background-position 0.3s calc(0.3s - var(--t, 0s));
-}
-
-.liquid:hover {
-  --p: 100%;
-  --t: 0.3s;
-  color: #fff;
-}
-
-/* --- Responsive Design --- */
-@media (max-width: 900px) {
-    .featured-product-row,
-    .featured-product-row.reversed {
-        flex-direction: column;
-        height: auto; /* Override fixed height for mobile */
-    }
-
-    .featured-product-image,
-    .featured-product-info {
-        flex: 1 1 100%;
-        min-width: 100%;
-    }
-
-    .featured-product-info {
-        padding: 40px;
-    }
-}
-
-@media (max-width: 600px) {
-    .hero-content h1 {
-        font-size: 2.5rem;
-    }
-    .hero-content p {
-        font-size: 1.2rem;
-    }
-    .featured-product-info h3 {
-        font-size: 1.8rem;
-    }
-    .featured-product-purchase {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-    }
-}
-
-/* --- Scroll Down Indicator --- */
-.scroll-down-indicator {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  z-index: 10;
-  width: 24px;
-  height: 24px;
-  border-left: 2px solid white;
-  border-bottom: 2px solid white;
-  transform: translateX(-50%) rotate(-45deg);
-  animation: bounce 2s infinite;
-  opacity: 1;
-  transition: opacity 0.5s ease;
-}
-
-.scroll-down-indicator.hidden {
-  opacity: 0;
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateX(-50%) translateY(0) rotate(-45deg);
-  }
-  40% {
-    transform: translateX(-50%) translateY(-10px) rotate(-45deg);
-  }
-  60% {
-    transform: translateX(-50%) translateY(-5px) rotate(-45deg);
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .hero-logo {
+    width: 90px;
+    top: 20px;
+    left: 20px;
   }
 }

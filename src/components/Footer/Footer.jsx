@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import './Footer.css';
 import githubIcon from '../../assets/img/githubwhite.svg';
+import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -62,6 +63,21 @@ const Footer = () => {
     return () => window.removeEventListener('scroll', scrollHandler);
   }, []);
 
+  // --- Modal Scroll Lock ---
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.classList.remove('modal-open');
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.classList.remove('modal-open');
+    };
+  }, [isModalOpen]);
+
   const handleScrollToTop = () => {
     gsap.to(window, { duration: 1, scrollTo: 0, ease: 'power2.inOut' });
   };
@@ -70,6 +86,13 @@ const Footer = () => {
     <>
       <footer className="footer">
         <div className="footer-main-content">
+          <div className="footer-logo-column">
+            <div className="footer-logo-wrapper">
+              <img src={logoOnigashima} alt="Onigashima Store Logo" className="footer-logo" />
+              <p className='footer-logo-text'>Onigashima Store</p>
+            </div>
+            <p className="footer-tagline">Your universe of anime collectibles</p>
+          </div>
           <div className="footer-column">
             <h5>Navigation</h5>
             <Link to="/">Home</Link>
@@ -84,8 +107,8 @@ const Footer = () => {
           </div>
           <div className="footer-column">
             <h5>Legal</h5>
-            <span onClick={() => openModal(privacyPolicy)}>Privacy Policy</span>
-            <span onClick={() => openModal(termsOfUse)}>Terms of Use</span>
+            <button className="footer-link-btn" onClick={() => openModal(privacyPolicy)}>Privacy Policy</button>
+            <button className="footer-link-btn" onClick={() => openModal(termsOfUse)}>Terms of Use</button>
           </div>
         </div>
 

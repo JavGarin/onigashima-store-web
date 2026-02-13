@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import Spinner from './components/Spinner/Spinner';
+import ScrollToTop from './components/ScrollToTop';
 import AddToCartNotification from './components/AddToCartNotification/AddToCartNotification'; // Import notification component
 import Lenis from '@studio-freight/lenis';
 import { gsap } from 'gsap';
@@ -65,6 +66,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <Navbar />
       <Suspense fallback={<Spinner />}>
         <Routes>

@@ -7,6 +7,7 @@ import { useCart } from '../../context/CartContext';
 import { gsap } from 'gsap';
 import Spinner from '../../components/Spinner/Spinner';
 import './Catalog.css';
+import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 
 const Catalog = () => {
   const [products, setProducts] = useState([]);
@@ -76,9 +77,12 @@ const Catalog = () => {
   }
 
   return (
-    <div className="catalog-container" ref={comp}>
+    <div className="container-section catalog-section" ref={comp}>
       <div className="catalog-content" style={{ visibility: loading && !products.length ? 'hidden' : 'visible' }}>
-        <h2>Our Catalog</h2>
+        <div className="catalog-header">
+          <img src={logoOnigashima} alt="Onigashima Store Logo" className="catalog-logo" />
+          <h2>Our Catalog</h2>
+        </div>
         <p className="catalog-intro">Explore our full collection of anime treasures.</p>
         
         {/* Category Filter Bar */}
@@ -122,16 +126,20 @@ const Catalog = () => {
                         {product.rating} ({product.reviews} reviews)
                       </span>
                     </div>
-                    <p className="product-card-price">${product.price}</p>
+                    <div className="product-card-bottom">
+                      <p className="product-card-price">${product.price}</p>
+                    </div>
                   </div>
                 </Link>
-                <button className="btn liquid" onClick={() => addToCart(product)}>
+                <button className="btn-base btn-primary" onClick={() => addToCart(product)}>
                   Add to Cart
                 </button>
               </div>
             ))}
             {filteredProducts.length === 0 && (
-              <p className="no-products-msg">No products found in this category.</p>
+              <div className="no-products-msg">
+                <p>No products found in this category.</p>
+              </div>
             )}
           </div>
         )}
