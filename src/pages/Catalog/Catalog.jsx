@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 // SUPABASE DISABLED - Using mock data for demo purposes
 // import { supabase } from '../../supabaseClient';
 import { getAllProducts, getAllCategories } from '../../data/mockProducts';
 import { useCart } from '../../context/CartContext';
 import { gsap } from 'gsap';
 import Spinner from '../../components/Spinner/Spinner';
+import ProductCard from '../../components/ProductCard/ProductCard';
 import './Catalog.css';
 import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 
@@ -103,38 +103,11 @@ const Catalog = () => {
         {!loading && (
           <div className="product-grid">
             {filteredProducts.map(product => (
-              <div key={product.id} className="product-card">
-                <Link to={`/catalog/${product.id}`} className="product-link">
-                  <div className="product-image-container">
-                    <img src={product.image_url} alt={product.name} loading="lazy" />
-                    <span className="product-card-category">{product.category}</span>
-                    {product.tags && product.tags.length > 0 && (
-                      <span className="product-card-tag">{product.tags[0]}</span>
-                    )}
-                  </div>
-                  <div className="product-card-info">
-                    <h3>{product.name}</h3>
-                    <div className="product-card-rating">
-                      <div className="stars">
-                        {[...Array(5)].map((_, i) => (
-                          <span key={i} className={i < Math.floor(product.rating) ? 'star filled' : 'star'}>
-                            ★
-                          </span>
-                        ))}
-                      </div>
-                      <span className="rating-text">
-                        {product.rating} ({product.reviews} reviews)
-                      </span>
-                    </div>
-                    <div className="product-card-bottom">
-                      <p className="product-card-price">${product.price}</p>
-                    </div>
-                  </div>
-                </Link>
-                <button className="btn-base btn-primary" onClick={() => addToCart(product)}>
-                  Add to Cart
-                </button>
-              </div>
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                addToCart={addToCart} 
+              />
             ))}
             {filteredProducts.length === 0 && (
               <div className="no-products-msg">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
 import './Cart.css';
@@ -6,9 +6,9 @@ import './Cart.css';
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity } = useCart();
 
-  const calculateTotal = () => {
+  const cartTotal = useMemo(() => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
-  };
+  }, [cartItems]);
 
   if (cartItems.length === 0) {
     return (
@@ -68,7 +68,7 @@ const Cart = () => {
               <div className="summary-details">
                 <div className="summary-row">
                   <span>Subtotal</span>
-                  <span>${calculateTotal()}</span>
+                  <span>${cartTotal}</span>
                 </div>
                 <div className="summary-row">
                   <span>Shipping</span>
@@ -76,7 +76,7 @@ const Cart = () => {
                 </div>
                 <div className="summary-row total">
                   <span>Total</span>
-                  <span className="total-amount">${calculateTotal()}</span>
+                  <span className="total-amount">${cartTotal}</span>
                 </div>
               </div>
               <Link to="/checkout" className="btn-base btn-primary checkout-btn">

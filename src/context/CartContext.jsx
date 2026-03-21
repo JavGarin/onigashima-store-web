@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 // 1. Crear el contexto
@@ -26,7 +26,7 @@ export const CartProvider = ({ children }) => {
   });
 
   const [notification, setNotification] = useState('');
-  const [notificationTimer, setNotificationTimer] = useState(null);
+  const notificationTimer = useRef(null);
 
   // Guardar en localStorage cada vez que el carrito cambie
   useEffect(() => {
@@ -34,14 +34,13 @@ export const CartProvider = ({ children }) => {
   }, [cartItems]);
 
   const showNotification = (message) => {
-    if (notificationTimer) {
-      clearTimeout(notificationTimer);
+    if (notificationTimer.current) {
+      clearTimeout(notificationTimer.current);
     }
     setNotification(message);
-    const timer = setTimeout(() => {
+    notificationTimer.current = setTimeout(() => {
       setNotification('');
     }, 3000);
-    setNotificationTimer(timer);
   };
 
   // Función para añadir un producto al carrito

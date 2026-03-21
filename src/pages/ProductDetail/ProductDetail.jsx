@@ -30,24 +30,6 @@ const ProductDetail = () => {
           throw new Error(`Product with ID ${id} does not exist.`);
         }
 
-        /* SUPABASE LOGIC - Commented for demo mode
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('id', id)
-          .single();
-
-        if (error) {
-          throw new Error(`Could not find the product. Reason: ${error.message}`);
-        }
-
-        if (data) {
-          setProduct(data);
-        } else {
-          throw new Error(`Product with ID ${id} does not exist.`);
-        }
-        */
-
       } catch (error) {
         setError(error.message);
       } finally {

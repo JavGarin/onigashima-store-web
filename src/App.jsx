@@ -51,13 +51,6 @@ function App() {
     gsap.ticker.lagSmoothing(0);
     gsap.registerPlugin(ScrollTrigger);
 
-    // RAF loop
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-
     return () => {
       // Cleanup
       lenis.destroy();
