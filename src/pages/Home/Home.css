@@ -1,6 +1,8 @@
 /* --- Hero Section --- */
 .hero-container {
   height: 100vh;
+  /* El uso de svh (small viewport height) previene saltos en iOS/Android cuando la barra de direcciones se oculta/muestra */
+  height: 100svh;
   width: 100%;
   position: relative;
   display: flex;

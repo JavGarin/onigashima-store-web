@@ -14,12 +14,28 @@ const Home = () => {
   const videoRef = React.useRef(null);
 
   useEffect(() => {
-    // Asegurar que el video se reproduzca al cambiar de fuente o redimensionar
-    if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.log("Autoplay blocked or interrupted:", error);
-      });
-    }
+    // Asegurar que el video se reproduzca al cambiar de fuente, redimensionar la ventana o salir de modo reposo
+    const playVideo = () => {
+      if (videoRef.current && videoRef.current.paused) {
+        videoRef.current.play().catch(error => {
+          console.log("Autoplay blocked or interrupted:", error);
+        });
+      }
+    };
+
+    playVideo();
+
+    // Cuando el viewport cambia (ej. tablet), a veces el navegador pausa el video para ahorrar recursos.
+    // Esto asegura que se siga reproduciendo sin que se vea afectado.
+    window.addEventListener('resize', playVideo);
+    window.addEventListener('orientationchange', playVideo);
+    document.addEventListener('visibilitychange', playVideo);
+
+    return () => {
+      window.removeEventListener('resize', playVideo);
+      window.removeEventListener('orientationchange', playVideo);
+      document.removeEventListener('visibilitychange', playVideo);
+    };
   }, [currentVideoIndex]);
 
   const handleVideoEnd = () => {
