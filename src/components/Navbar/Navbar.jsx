@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
 import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 
 const Navbar = () => {
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const { cartCount } = useCart();
   const { user, logout } = useAuth();
@@ -29,6 +30,11 @@ const Navbar = () => {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  // En la home page, el marco Neo-Frame Canvas gestiona su propio header perimetral
+  if (location.pathname === '/') {
+    return null;
+  }
 
   return (
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>

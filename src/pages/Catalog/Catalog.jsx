@@ -80,10 +80,13 @@ const Catalog = () => {
     <div className="container-section catalog-section" ref={comp}>
       <div className="catalog-content" style={{ visibility: loading && !products.length ? 'hidden' : 'visible' }}>
         <div className="catalog-header">
-          <img src={logoOnigashima} alt="Onigashima Store Logo" className="catalog-logo" />
-          <h2>Our Catalog</h2>
+          <span className="catalog-header-badge">// ARCHIVE COLLECTION 2026</span>
+          <div className="catalog-title-wrap">
+            <img src={logoOnigashima} alt="Onigashima Store Logo" className="catalog-logo" />
+            <h2>Curated Archive Catalog</h2>
+          </div>
         </div>
-        <p className="catalog-intro">Explore our full collection of anime treasures.</p>
+        <p className="catalog-intro">Explore our full collection of authentic Japanese figures and limited editions.</p>
         
         {/* Category Filter Bar */}
         <div className="category-filter">

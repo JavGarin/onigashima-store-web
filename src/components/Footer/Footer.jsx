@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import './Footer.css';
@@ -9,9 +9,44 @@ import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 gsap.registerPlugin(ScrollToPlugin);
 
 const Footer = () => {
+  const location = useLocation();
   const scrollToTopRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({ title: '', content: '' });
+
+  // --- Scroll to Top Logic ---
+  useEffect(() => {
+    if (location.pathname === '/') return;
+
+    const scrollHandler = () => {
+      if (!scrollToTopRef.current) return;
+      if (window.scrollY > 200) {
+        gsap.to(scrollToTopRef.current, { autoAlpha: 1, duration: 0.3 });
+      } else {
+        gsap.to(scrollToTopRef.current, { autoAlpha: 0, duration: 0.3 });
+      }
+    };
+
+    window.addEventListener('scroll', scrollHandler, { passive: true });
+    return () => window.removeEventListener('scroll', scrollHandler);
+  }, [location.pathname]);
+
+  // --- Modal Scroll Lock ---
+  useEffect(() => {
+    if (location.pathname === '/') return;
+
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.classList.remove('modal-open');
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.classList.remove('modal-open');
+    };
+  }, [isModalOpen, location.pathname]);
 
   // --- Fictitious Content ---
   const privacyPolicy = {
@@ -49,38 +84,14 @@ const Footer = () => {
     setIsModalOpen(false);
   };
 
-  // --- Scroll to Top Logic ---
-  useEffect(() => {
-    const scrollHandler = () => {
-      if (window.scrollY > 200) {
-        gsap.to(scrollToTopRef.current, { autoAlpha: 1, duration: 0.3 });
-      } else {
-        gsap.to(scrollToTopRef.current, { autoAlpha: 0, duration: 0.3 });
-      }
-    };
-
-    window.addEventListener('scroll', scrollHandler);
-    return () => window.removeEventListener('scroll', scrollHandler);
-  }, []);
-
-  // --- Modal Scroll Lock ---
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.classList.add('modal-open');
-    } else {
-      document.body.style.overflow = 'unset';
-      document.body.classList.remove('modal-open');
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-      document.body.classList.remove('modal-open');
-    };
-  }, [isModalOpen]);
-
   const handleScrollToTop = () => {
     gsap.to(window, { duration: 1, scrollTo: 0, ease: 'power2.inOut' });
   };
+
+  // En la home page, el marco Neo-Frame contiene los vértices perimetrales con copyright y navegación
+  if (location.pathname === '/') {
+    return null;
+  }
 
   return (
     <>

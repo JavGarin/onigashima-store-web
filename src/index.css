@@ -2,22 +2,25 @@
 
 *, *::before, *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 :root {
   font-family: var(--font-main);
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: light;
-  background-color: var(--bg-primary);
-  color: var(--text-secondary);
+  color-scheme: dark;
+  background-color: var(--bg-dark);
+  color: var(--color-white);
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: var(--bg-dark);
+  color: var(--color-white);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -28,7 +31,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-headings);
   color: var(--text-primary);
   line-height: 1.2;
-  margin-top: 0;
   letter-spacing: -0.02em;
 }
 
@@ -39,55 +41,87 @@ h4 { font-size: var(--font-size-xl); font-weight: 600; }
 
 p {
   line-height: 1.6;
-  margin-bottom: 1.5rem;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  font-family: var(--font-mono);
 }
 
 /* === Base Components === */
 .container-section {
-  padding: 120px 20px 80px;
-  max-width: 1200px;
+  padding: 100px 20px 80px;
+  max-width: 1280px;
   margin: 0 auto;
+}
+
+/* Padding responsivo para container-section en móvil */
+@media (max-width: 768px) {
+  .container-section {
+    padding: 80px 16px 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container-section {
+    padding: 72px 12px 48px;
+  }
 }
 
 .btn-base {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.75rem;
+  gap: 8px;
+  padding: 0.75rem 1.4rem;
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none;
-  border-radius: 14px;
-  transition: var(--transition-normal);
+  border-radius: 0px;
+  transition: all var(--transition-fast);
   cursor: pointer;
-  border: none;
+  border: 1.5px solid transparent;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-family: var(--font-mono);
 }
 
 .btn-primary {
-  background: var(--gradient-button);
-  color: white;
-  box-shadow: var(--shadow-sm);
+  background: var(--color-accent);
+  color: var(--color-white);
+  border: 1.5px solid #ffffff;
+  box-shadow: 3px 3px 0px rgba(255, 255, 255, 0.85);
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-  filter: brightness(1.05);
+  background: var(--color-accent-hover);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #ffffff;
+  filter: brightness(1.1);
+}
+
+.btn-primary:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px transparent;
 }
 
 .btn-secondary {
-  background: var(--bg-white);
-  border: 1px solid var(--border-medium);
+  background: rgba(16, 16, 22, 0.9);
+  border: 1.5px solid var(--border-medium);
   color: var(--text-primary);
+  box-shadow: 3px 3px 0px rgba(255, 255, 255, 0.2);
 }
 
 .btn-secondary:hover {
-  background: var(--bg-secondary);
-  border-color: var(--color-primary);
+  background: rgba(24, 24, 32, 0.95);
+  border-color: rgba(255, 255, 255, 0.45);
+  color: var(--color-white);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px 0px transparent;
 }
 
 /* === Layout Utilities === */
@@ -98,7 +132,7 @@ code {
 }
 
 .text-gradient {
-  background: linear-gradient(45deg, var(--text-primary), var(--color-primary-active));
+  background: linear-gradient(135deg, #ffffff 30%, #e74d4d 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -106,48 +140,52 @@ code {
 
 /* === Global UI Elements === */
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: #000000;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-secondary);
-  border-radius: 6px;
-  border: 3px solid var(--bg-secondary);
+  background: #282834;
+  border-radius: 0px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-secondary-hover);
+  background: var(--color-accent);
 }
 
 .scroll-to-top {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 50px;
-  height: 50px;
-  background-color: var(--color-primary-active);
+  bottom: 24px;
+  right: 24px;
+  width: 42px;
+  height: 42px;
+  background-color: var(--color-accent);
   color: white;
-  border-radius: 50%;
-  border: none;
-  box-shadow: var(--shadow-md);
+  border-radius: 0px;
+  border: 1.5px solid #ffffff;
+  box-shadow: 3px 3px 0px #000000;
   cursor: pointer;
   z-index: 1000;
-  transition: var(--transition-normal);
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 1rem;
   opacity: 0;
   visibility: hidden;
 }
 
 .scroll-to-top:hover {
-  background-color: var(--color-primary-hover);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #ffffff;
 }
 
 .scroll-to-top.visible {

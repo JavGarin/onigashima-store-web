@@ -1,11 +1,11 @@
 .navbar {
   position: fixed;
-  top: 20px;
+  top: 16px;
   left: 50%;
   transform: translateX(-50%);
   width: auto;
   min-width: 60%;
-  height: 64px;
+  height: 60px;
   z-index: 1000;
   transition: var(--transition-slow);
   display: flex;
@@ -16,27 +16,27 @@
 
 .navbar-container {
   pointer-events: auto;
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: 40px;
+  background: rgba(10, 10, 14, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0px;
   padding: 0 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 900px;
+  max-width: 960px;
   height: 100%;
-  box-shadow: var(--shadow-md);
+  box-shadow: 4px 4px 0px var(--color-accent), 0 0 0 1px rgba(255, 255, 255, 0.1);
   transition: var(--transition-slow);
 }
 
 .navbar.scrolled .navbar-container {
-  height: 56px;
-  max-width: 800px;
-  background: rgba(255, 245, 240, 0.8);
-  box-shadow: var(--shadow-lg);
+  height: 52px;
+  max-width: 860px;
+  background: rgba(6, 6, 8, 0.98);
+  box-shadow: 4px 4px 0px var(--color-accent);
 }
 
 .navbar-brand {
@@ -52,9 +52,9 @@
 }
 
 .navbar-logo-img {
-  width: 32px;
-  height: 32px;
-  filter: drop-shadow(0 2px 4px rgba(255, 183, 197, 0.2));
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 2px 6px var(--color-accent-glow));
 }
 
 .navbar-brand-name {
@@ -105,10 +105,12 @@
 .nav-user-greeting {
   color: var(--text-tertiary);
   font-size: var(--font-size-xs);
-  font-weight: 500;
+  font-weight: 700;
   background: var(--bg-tertiary);
-  padding: 4px 12px;
-  border-radius: 20px;
+  padding: 4px 10px;
+  border-radius: 0px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-family: var(--font-mono);
 }
 
 .navbar-actions {
@@ -122,60 +124,68 @@
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  color: var(--text-primary);
-  background: var(--bg-white);
+  color: #ffffff;
+  background: var(--color-accent);
   padding: 6px 14px;
-  border-radius: 20px;
-  transition: var(--transition-normal);
-  border: 2px solid var(--color-primary); /* Standout border */
+  border-radius: 0px;
+  transition: var(--transition-fast);
+  border: 1.5px solid #ffffff;
+  box-shadow: none;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
 }
 
 .nav-cart-link:hover {
-  background: var(--color-primary);
+  background: var(--color-accent-hover);
   color: white;
   transform: translateY(-1px);
+  box-shadow: none;
 }
 
 .cart-icon-svg {
-  width: 18px;
-  height: 18px;
-  stroke: var(--color-primary-active);
+  width: 17px;
+  height: 17px;
+  stroke: #ffffff;
 }
 
 .cart-icon-text {
   font-size: var(--font-size-sm);
-  font-weight: 700; /* Bolder text for visibility */
+  font-weight: 800;
 }
 
 .cart-badge-pill {
-  background: var(--color-primary-active);
-  color: white;
+  background: #ffffff;
+  color: #000000;
   font-size: var(--font-size-xs);
-  font-weight: 700;
-  min-width: 20px;
-  height: 20px;
+  font-weight: 900;
+  min-width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(255, 148, 170, 0.4);
+  border-radius: 0px;
+  font-family: var(--font-mono);
 }
 
 .nav-logout-pill {
   background: transparent;
-  border: 1px solid var(--color-error);
+  border: 1.5px solid var(--color-error);
   color: var(--color-error);
-  padding: 6px 14px;
-  border-radius: 20px;
+  padding: 6px 12px;
+  border-radius: 0px;
   font-size: var(--font-size-xs);
-  font-weight: 600;
+  font-weight: 800;
   cursor: pointer;
-  transition: var(--transition-normal);
+  transition: var(--transition-fast);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
 }
 
 .nav-logout-pill:hover {
   background: var(--color-error);
   color: white;
+  box-shadow: 2px 2px 0px #ffffff;
+  transform: translate(1px, 1px);
 }
 
 .menu-icon-trigger {
@@ -220,18 +230,23 @@
   top: 0;
   right: 0;
   height: 100vh;
+  height: 100dvh; /* Sobrescribe con la unidad dinámica moderna — evita recorte en iOS Safari */
   width: 320px;
   max-width: 85%;
-  background: var(--bg-white);
+  background: rgba(14, 14, 18, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid var(--frame-border);
   z-index: 1101;
   transform: translateX(100%);
   visibility: hidden;
   pointer-events: none;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.5s;
-  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
   padding: 40px 30px;
   display: flex;
   flex-direction: column;
+  overflow-y: auto; /* Permite scroll interno si el contenido supera la altura */
 }
 
 .mobile-sidebar.active {

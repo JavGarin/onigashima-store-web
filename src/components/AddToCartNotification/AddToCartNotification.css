@@ -1,19 +1,25 @@
 .notification-container {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background-color: #646cff; /* Usando el color principal de la app */
-    color: white;
-    padding: 16px 24px;
-    border-radius: 8px;
+    bottom: 24px;
+    right: 24px;
+    background: rgba(12, 12, 16, 0.96);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1.5px solid #ffffff;
+    color: var(--color-white);
+    padding: 14px 22px;
+    border-radius: 0px;
     z-index: 2000;
-    font-size: 1rem;
-    font-weight: 500;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    font-size: 0.85rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    box-shadow: 4px 4px 0px var(--color-accent), 0 10px 30px rgba(0, 0, 0, 0.9);
     visibility: hidden;
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.4s ease-in-out;
+    transform: translateY(16px);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .notification-container.show {
