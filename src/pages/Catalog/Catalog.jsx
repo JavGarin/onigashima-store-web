@@ -7,7 +7,6 @@ import { gsap } from 'gsap';
 import Spinner from '../../components/Spinner/Spinner';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import './Catalog.css';
-import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 
 const Catalog = () => {
   const [products, setProducts] = useState([]);
@@ -82,7 +81,7 @@ const Catalog = () => {
         <div className="catalog-header">
           <span className="catalog-header-badge">// ARCHIVE COLLECTION 2026</span>
           <div className="catalog-title-wrap">
-            <img src={logoOnigashima} alt="Onigashima Store Logo" className="catalog-logo" />
+            <img src="/onigashima_store_logo.avif" alt="Onigashima Store Logo" className="catalog-logo" />
             <h2>Curated Archive Catalog</h2>
           </div>
         </div>

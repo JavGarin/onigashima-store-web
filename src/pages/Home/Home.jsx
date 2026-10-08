@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
@@ -6,14 +6,13 @@ import { getFeaturedProducts } from '../../data/mockProducts';
 import './Home.css';
 import videoBg from '../../assets/video/FLCL.webm';
 import battle1Bg from '../../assets/video/battle1.webm';
-import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 
 const videos = [videoBg, battle1Bg];
 
 const Home = () => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
   const videoRef = useRef(null);
-  const carouselTrackRef = useRef(null);
 
   // Cart & Auth Contexts
   const { cartCount, addToCart } = useCart();
@@ -23,9 +22,8 @@ const Home = () => {
   const [activePanelKey, setActivePanelKey] = useState(null);
   const [panelContent, setPanelContent] = useState({ title: '', body: '' });
 
-  // Carousel State & Products
+  // Carousel Products & State
   const featuredProducts = getFeaturedProducts(6);
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [addedItemNotice, setAddedItemNotice] = useState(null);
 
   // Predefined panel details
@@ -97,20 +95,141 @@ const Home = () => {
     setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
   };
 
-  // Carousel Controls
-  const scrollCarousel = (direction) => {
-    if (!carouselTrackRef.current) return;
-    const scrollAmount = 300;
-    carouselTrackRef.current.scrollBy({
-      left: direction === 'next' ? scrollAmount : -scrollAmount,
-      behavior: 'smooth'
-    });
-    
-    if (direction === 'next') {
-      setActiveCardIndex((prev) => Math.min(prev + 1, featuredProducts.length - 1));
+  const togglePlayVideo = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play().then(() => setIsVideoPlaying(true)).catch(() => {});
     } else {
-      setActiveCardIndex((prev) => Math.max(prev - 1, 0));
+      video.pause();
+      setIsVideoPlaying(false);
     }
+  };
+
+  const cycleVideoClip = () => {
+    setCurrentVideoIndex((prevIndex) => (prevIndex + 1) % videos.length);
+    setIsVideoPlaying(true);
+  };
+
+  // === Sistema de Carrusel por Lotes Sincronizados (Awwwards 2026) ===
+  const [itemsPerPage, setItemsPerPage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth <= 580) return 1;
+      if (window.innerWidth <= 900) return 2;
+      return 3;
+    }
+    return 3;
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width <= 580) {
+        setItemsPerPage(1);
+      } else if (width <= 900) {
+        setItemsPerPage(2);
+      } else {
+        setItemsPerPage(3);
+      }
+    };
+
+    window.addEventListener('resize', handleResize, { passive: true });
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Agrupamiento exacto de productos en lotes (tríos en desktop, pares en tablet, individual en mobile)
+  const productBatches = useMemo(() => {
+    const batches = [];
+    for (let i = 0; i < featuredProducts.length; i += itemsPerPage) {
+      batches.push(featuredProducts.slice(i, i + itemsPerPage));
+    }
+    return batches;
+  }, [featuredProducts, itemsPerPage]);
+
+  const [activeBatchIndex, setActiveBatchIndex] = useState(0);
+  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
+  const [timelineKey, setTimelineKey] = useState(0);
+  const autoplayResumeTimeoutRef = useRef(null);
+  const touchStartXRef = useRef(null);
+
+  // Asegurar índice válido si cambia el tamaño de pantalla
+  useEffect(() => {
+    if (activeBatchIndex >= productBatches.length) {
+      setActiveBatchIndex(Math.max(0, productBatches.length - 1));
+      setTimelineKey((k) => k + 1);
+    }
+  }, [productBatches.length, activeBatchIndex]);
+
+  const pauseAutoplayTemporarily = (delay = 5500) => {
+    setIsCarouselPaused(true);
+    if (autoplayResumeTimeoutRef.current) {
+      clearTimeout(autoplayResumeTimeoutRef.current);
+    }
+    autoplayResumeTimeoutRef.current = setTimeout(() => {
+      setIsCarouselPaused(false);
+      setTimelineKey((k) => k + 1);
+    }, delay);
+  };
+
+  const goToBatch = (index) => {
+    pauseAutoplayTemporarily(6000);
+    setActiveBatchIndex(index);
+    setTimelineKey((k) => k + 1);
+  };
+
+  const nextBatch = () => {
+    if (productBatches.length <= 1) return;
+    pauseAutoplayTemporarily(6000);
+    setActiveBatchIndex((prev) => (prev + 1) % productBatches.length);
+    setTimelineKey((k) => k + 1);
+  };
+
+  const prevBatch = () => {
+    if (productBatches.length <= 1) return;
+    pauseAutoplayTemporarily(6000);
+    setActiveBatchIndex((prev) => (prev - 1 + productBatches.length) % productBatches.length);
+    setTimelineKey((k) => k + 1);
+  };
+
+  // Autoplay con ciclo de 5 segundos
+  useEffect(() => {
+    if (isCarouselPaused || productBatches.length <= 1) return;
+
+    const interval = setInterval(() => {
+      if (document.hidden) return;
+      setActiveBatchIndex((prev) => (prev + 1) % productBatches.length);
+      setTimelineKey((k) => k + 1);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isCarouselPaused, productBatches.length, timelineKey]);
+
+  useEffect(() => {
+    return () => {
+      if (autoplayResumeTimeoutRef.current) {
+        clearTimeout(autoplayResumeTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Gestos táctiles fluidos (Mobile Swipe)
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    setIsCarouselPaused(true);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartXRef.current === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const diff = touchStartXRef.current - touchEndX;
+
+    if (diff > 45) {
+      nextBatch();
+    } else if (diff < -45) {
+      prevBatch();
+    }
+    touchStartXRef.current = null;
+    pauseAutoplayTemporarily(5500);
   };
 
   const handleQuickAdd = (product, e) => {
@@ -156,7 +275,7 @@ const Home = () => {
           <header className="frame-header">
             <div className="brand">
               <Link to="/" className="brand-logo-link">
-                <img src={logoOnigashima} alt="Onigashima Store Logo" className="brand-logo-img" />
+                <img src="/onigashima_store_logo.avif" alt="Onigashima Store Logo" className="brand-logo-img" />
                 <div className="brand-texts">
                   <h1 className="brand-title">ONIGASHIMA STORE</h1>
                   <h2 className="brand-subtitle">Anime Collectibles & Archive Figures</h2>
@@ -202,20 +321,107 @@ const Home = () => {
             </aside>
           )}
 
-          {/* Área Central: Hero Statement & Carrusel con Corte Diagonal */}
+          {/* Área Central: Hero Statement, Logotipo Maestro & Carrusel con Corte Diagonal */}
           <section className="hero-center-showcase">
-            <div className="showcase-headline">
-              <span className="headline-meta">// CURATED JAPANESE DROPS</span>
-              <h2 className="headline-title">
-                Autenticidad pura traída desde <span className="title-accent">Akihabara</span>.
-              </h2>
+            <div className="hero-identity-grid">
+              {/* Logotipo Maestro de Gran Formato en el Hero */}
+              <div className="hero-logo-showcase" aria-label="Logotipo oficial de Onigashima Store">
+                <div className="hero-logo-frame">
+                  <div className="hero-logo-halo" />
+                  <img 
+                    src="/onigashima_store_logo.avif" 
+                    alt="Onigashima Store Official Logo" 
+                    className="hero-emblem-img"
+                    width="110"
+                    height="110"
+                    loading="eager"
+                  />
+                  <div className="hero-logo-corner top-left" aria-hidden="true" />
+                  <div className="hero-logo-corner top-right" aria-hidden="true" />
+                  <div className="hero-logo-corner bottom-left" aria-hidden="true" />
+                  <div className="hero-logo-corner bottom-right" aria-hidden="true" />
+                </div>
+                <div className="hero-logo-subtag">
+                  <span className="subtag-jp">鬼ヶ島</span>
+                  <span className="subtag-dot" />
+                  <span className="subtag-edition">ARCHIVE 2026</span>
+                </div>
+              </div>
+
+              {/* Contenido Tipográfico & HUD de Control de Video */}
+              <div className="hero-copy-block">
+                <div className="showcase-headline">
+                  <div className="headline-meta-row">
+                    <span className="headline-meta">// CURATED JAPANESE DROPS</span>
+                    <span className="headline-badge">EDICIÓN DE COLECCIÓN</span>
+
+                    {/* HUD Video Player Control Confinado y Compacto */}
+                    <div className="hero-video-hud" aria-label="Controles del video de fondo">
+                      <span className={`video-hud-pulse ${isVideoPlaying ? 'playing' : 'paused'}`} />
+                      <span className="video-hud-feed">
+                        {isVideoPlaying ? `CLIP 0${currentVideoIndex + 1}` : 'PAUSA'}
+                      </span>
+                      <button 
+                        type="button" 
+                        onClick={togglePlayVideo}
+                        className="video-hud-btn"
+                        aria-label={isVideoPlaying ? "Pausar video" : "Reproducir video"}
+                      >
+                        {isVideoPlaying ? '❚❚' : '▶'}
+                      </button>
+                      <button 
+                        type="button" 
+                        onClick={cycleVideoClip}
+                        className="video-hud-btn video-hud-btn-switch"
+                        aria-label="Cambiar siguiente clip de video"
+                      >
+                        ⇄ CLIP
+                      </button>
+                    </div>
+                  </div>
+
+                  <h2 className="headline-title">
+                    Autenticidad pura traída desde <span className="title-accent">Akihabara</span>.
+                  </h2>
+                  <p className="headline-subtitle-desc">
+                    Figuras de archivo oficial y reliquias exclusivas importadas directamente desde los estudios más prestigiosos de Japón.
+                  </p>
+                </div>
+              </div>
             </div>
+
+            {/* Barra de Navegación & Acciones Rápidas (Ubicada Arriba del Catálogo) */}
+            <nav className="hero-top-nav-bar" aria-label="Navegación principal">
+              <Link to="/catalog" className="nav-cta-primary">
+                Ver Catálogo Completo &rarr;
+              </Link>
+              <div className="nav-secondary-links">
+                <button 
+                  onClick={() => openPanel('about')}
+                  className={`nav-btn ${activePanelKey === 'about' ? 'active' : ''}`}
+                >
+                  Acerca de
+                </button>
+                <button 
+                  onClick={() => openPanel('shipping')}
+                  className={`nav-btn ${activePanelKey === 'shipping' ? 'active' : ''}`}
+                >
+                  Envíos & Sellos
+                </button>
+                <button 
+                  onClick={() => openPanel('contact')}
+                  className={`nav-btn ${activePanelKey === 'contact' ? 'active' : ''}`}
+                >
+                  Contacto
+                </button>
+              </div>
+            </nav>
 
             {/* Zona con Corte Diagonal Técnico */}
             <div className="diagonal-showcase-zone">
               {/* Divisor Visual de Corte Diagonal */}
               <div className="diagonal-cut-edge" aria-hidden="true">
-                <svg className="diagonal-cut-svg" viewBox="0 0 1200 36" preserveAspectRatio="none">
+                <svg className="diagonal-cut-svg" viewBox="0 0 1200 22" preserveAspectRatio="none">
                   <defs>
                     <linearGradient id="edgeGlow" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.2" />
@@ -225,117 +431,161 @@ const Home = () => {
                     </linearGradient>
                   </defs>
                   {/* Relleno inferior del corte diagonal que se funde con el fondo del carrusel */}
-                  <polygon points="0,36 0,26 1200,4 1200,36" className="diagonal-svg-fill" />
+                  <polygon points="0,22 0,14 1200,2 1200,22" className="diagonal-svg-fill" />
                   {/* Línea inclinada con gradiente de luz neón */}
-                  <line x1="0" y1="26" x2="1200" y2="4" stroke="url(#edgeGlow)" strokeWidth="1.7" vectorEffect="non-scaling-stroke" />
+                  <line x1="0" y1="14" x2="1200" y2="2" stroke="url(#edgeGlow)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
                 </svg>
               </div>
 
               {/* Contenedor del Carrusel integrado bajo el corte diagonal */}
               <div className="diagonal-shelf-body">
-                <div className="hero-carousel-container">
+                <div 
+                  className="hero-carousel-container"
+                  onMouseEnter={() => setIsCarouselPaused(true)}
+                  onMouseLeave={() => setIsCarouselPaused(false)}
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
+                >
                   <div className="carousel-top-bar">
                     <div className="carousel-label">
                       <span className="live-indicator" />
-                      <span>Destacados en Exhibición ({featuredProducts.length})</span>
+                      <span className="carousel-title-text">EXHIBICIÓN DROPS 2026</span>
+                      <span className="carousel-count-tag">[{featuredProducts.length} PIEZAS]</span>
                     </div>
+
+                    {/* HUD Central: Telemetría de Lotes & Timeline Progress */}
+                    <div className="carousel-telemetry-hud">
+                      <div className="carousel-batch-indicator">
+                        <span className="batch-label">LOTE</span>
+                        <span className="batch-numbers">
+                          <strong className="batch-current">0{activeBatchIndex + 1}</strong>
+                          <span className="batch-sep">/</span>
+                          <span className="batch-total">0{productBatches.length}</span>
+                        </span>
+                      </div>
+
+                      {/* Barra de progreso interactiva (Timeline) */}
+                      <div 
+                        className={`carousel-timeline-track ${isCarouselPaused ? 'paused' : ''}`}
+                        title={isCarouselPaused ? "Pausa activa" : "Progreso de auto-avance"}
+                      >
+                        <div 
+                          key={timelineKey}
+                          className={`carousel-timeline-fill ${isCarouselPaused ? 'is-paused' : 'is-running'}`} 
+                        />
+                      </div>
+                    </div>
+
+                    {/* Controles de Lote Directos y Flechas */}
                     <div className="carousel-controls">
-                      <button 
-                        onClick={() => scrollCarousel('prev')} 
-                        className="carousel-btn prev-btn" 
-                        aria-label="Figura anterior"
-                      >
-                        &#8592;
-                      </button>
-                      <button 
-                        onClick={() => scrollCarousel('next')} 
-                        className="carousel-btn next-btn" 
-                        aria-label="Figura siguiente"
-                      >
-                        &#8594;
-                      </button>
+                      {/* Píldoras de selector de lote para salto instantáneo */}
+                      <div className="carousel-batch-pills" role="tablist" aria-label="Seleccionar lote">
+                        {productBatches.map((_, idx) => (
+                          <button
+                            key={idx}
+                            type="button"
+                            role="tab"
+                            aria-selected={activeBatchIndex === idx}
+                            aria-label={`Ir al lote ${idx + 1}`}
+                            className={`batch-pill-btn ${activeBatchIndex === idx ? 'active' : ''}`}
+                            onClick={() => goToBatch(idx)}
+                          >
+                            0{idx + 1}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="carousel-nav-arrows">
+                        <button 
+                          type="button"
+                          onClick={prevBatch} 
+                          className="carousel-btn prev-btn" 
+                          aria-label="Lote anterior"
+                          title="Lote anterior"
+                        >
+                          &#8592;
+                        </button>
+                        <button 
+                          type="button"
+                          onClick={nextBatch} 
+                          className="carousel-btn next-btn" 
+                          aria-label="Lote siguiente"
+                          title="Lote siguiente"
+                        >
+                          &#8594;
+                        </button>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="carousel-track" ref={carouselTrackRef}>
-                    {featuredProducts.map((product) => (
-                      <article key={product.id} className="carousel-card">
-                        <Link to={`/catalog/${product.id}`} className="card-media-wrap">
-                          <img 
-                            src={product.image_url} 
-                            alt={product.name} 
-                            loading="lazy" 
-                            className="card-thumb-img" 
-                          />
-                          <span className="card-badge-category">{product.category}</span>
-                          {product.tags && product.tags[0] && (
-                            <span className="card-badge-tag">{product.tags[0]}</span>
-                          )}
-                        </Link>
+                  {/* Viewport Confinado (Hermético dentro del marco) */}
+                  <div className="carousel-viewport">
+                    <div 
+                      className="carousel-slider-track"
+                      style={{ transform: `translateX(-${activeBatchIndex * 100}%)` }}
+                    >
+                      {productBatches.map((batch, batchIdx) => (
+                        <div 
+                          key={batchIdx} 
+                          className="carousel-page-slide"
+                          aria-hidden={activeBatchIndex !== batchIdx}
+                        >
+                          {batch.map((product) => (
+                            <article key={product.id} className="carousel-card">
+                              <Link to={`/catalog/${product.id}`} className="card-media-wrap">
+                                <img 
+                                  src={product.image_url} 
+                                  alt={product.name} 
+                                  loading="lazy" 
+                                  className="card-thumb-img" 
+                                />
+                                <span className="card-badge-category">{product.category}</span>
+                                {product.tags && product.tags[0] && (
+                                  <span className="card-badge-tag">{product.tags[0]}</span>
+                                )}
+                              </Link>
 
-                        <div className="card-details">
-                          <Link to={`/catalog/${product.id}`} className="card-title-link">
-                            <h4 className="card-product-name">{product.name}</h4>
-                          </Link>
-                          
-                          <div className="card-meta-row">
-                            <span className="card-price">${product.price}</span>
-                            <div className="card-stars">
-                              ★ {product.rating}
-                            </div>
-                          </div>
+                              <div className="card-details">
+                                <Link to={`/catalog/${product.id}`} className="card-title-link">
+                                  <h4 className="card-product-name">{product.name}</h4>
+                                </Link>
+                                
+                                <div className="card-meta-row">
+                                  <span className="card-price">${Number(product.price).toLocaleString('es-CL')}</span>
+                                  <div className="card-stars">
+                                    ★ {product.rating}
+                                  </div>
+                                </div>
 
-                          <div className="card-actions-row">
-                            <button 
-                              className={`btn-quick-add ${addedItemNotice === product.id ? 'added' : ''}`}
-                              onClick={(e) => handleQuickAdd(product, e)}
-                              aria-label={`Añadir ${product.name} al carrito`}
-                            >
-                              {addedItemNotice === product.id ? '✓ Añadido' : '+ Añadir'}
-                            </button>
-                            <Link to={`/catalog/${product.id}`} className="btn-view-details">
-                              Ver
-                            </Link>
-                          </div>
+                                <div className="card-actions-row">
+                                  <button 
+                                    className={`btn-quick-add ${addedItemNotice === product.id ? 'added' : ''}`}
+                                    onClick={(e) => handleQuickAdd(product, e)}
+                                    aria-label={`Añadir ${product.name} al carrito`}
+                                  >
+                                    {addedItemNotice === product.id ? '✓ Añadido' : '+ Añadir'}
+                                  </button>
+                                  <Link to={`/catalog/${product.id}`} className="btn-view-details">
+                                    Ver
+                                  </Link>
+                                </div>
+                              </div>
+                            </article>
+                          ))}
                         </div>
-                      </article>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Vértice Inferior Izquierdo: Marca de agua técnica */}
+          {/* Vértice Inferior: Marca de agua técnica */}
           <div className="frame-watermark">
             <span>ONIGASHIMA STORE® // TOKYO • SANTIAGO</span>
             <span className="watermark-sub">EDICIÓN LIMITADA & ARCHIVO OFICIAL 2026</span>
           </div>
-
-          {/* Vértice Inferior Derecho: CTAs / Navegación */}
-          <nav className="frame-nav" aria-label="Navegación principal">
-            <Link to="/catalog" className="nav-cta-primary">
-              Ver Catálogo Completo &rarr;
-            </Link>
-            <button 
-              onClick={() => openPanel('about')}
-              className={`nav-btn ${activePanelKey === 'about' ? 'active' : ''}`}
-            >
-              Acerca de
-            </button>
-            <button 
-              onClick={() => openPanel('shipping')}
-              className={`nav-btn ${activePanelKey === 'shipping' ? 'active' : ''}`}
-            >
-              Envíos & Sellos
-            </button>
-            <button 
-              onClick={() => openPanel('contact')}
-              className={`nav-btn ${activePanelKey === 'contact' ? 'active' : ''}`}
-            >
-              Contacto
-            </button>
-          </nav>
 
         </div>
       </main>

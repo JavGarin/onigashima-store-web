@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import './Navbar.css';
-import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 
 const Navbar = () => {
   const location = useLocation();
@@ -40,7 +39,7 @@ const Navbar = () => {
     <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className="navbar-container">
         <Link to="/" className="navbar-brand">
-          <img src={logoOnigashima} alt="Onigashima Logo" className="navbar-logo-img" />
+          <img src="/onigashima_store_logo.avif" alt="Onigashima Logo" className="navbar-logo-img" />
           <span className="navbar-brand-name">Onigashima</span>
         </Link>
         
@@ -90,7 +89,7 @@ const Navbar = () => {
         <button className="mobile-close-btn" onClick={() => setIsMobileMenuOpen(false)} aria-label="Close menu">&times;</button>
         
         <div className="mobile-sidebar-header">
-          <img src={logoOnigashima} alt="" className="mobile-sidebar-logo" />
+          <img src="/onigashima_store_logo.avif" alt="Onigashima Logo" className="mobile-sidebar-logo" />
           <h3>Onigashima</h3>
         </div>
 

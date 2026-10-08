@@ -28,7 +28,7 @@ const ProductCard = ({ product, addToCart }) => {
             </span>
           </div>
           <div className="product-card-bottom">
-            <p className="product-card-price">${product.price}</p>
+            <p className="product-card-price">${Number(product.price).toLocaleString('es-CL')}</p>
           </div>
         </div>
       </Link>

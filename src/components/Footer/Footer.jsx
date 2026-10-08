@@ -4,7 +4,6 @@ import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import './Footer.css';
 import githubIcon from '../../assets/img/githubwhite.svg';
-import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -13,11 +12,14 @@ const Footer = () => {
   const scrollToTopRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState({ title: '', content: '' });
+  const [openSection, setOpenSection] = useState(null);
 
-  // --- Scroll to Top Logic ---
+  const toggleSection = (key) => {
+    setOpenSection((prev) => (prev === key ? null : key));
+  };
+
   useEffect(() => {
     if (location.pathname === '/') return;
-
     const scrollHandler = () => {
       if (!scrollToTopRef.current) return;
       if (window.scrollY > 200) {
@@ -26,15 +28,12 @@ const Footer = () => {
         gsap.to(scrollToTopRef.current, { autoAlpha: 0, duration: 0.3 });
       }
     };
-
     window.addEventListener('scroll', scrollHandler, { passive: true });
     return () => window.removeEventListener('scroll', scrollHandler);
   }, [location.pathname]);
 
-  // --- Modal Scroll Lock ---
   useEffect(() => {
     if (location.pathname === '/') return;
-
     if (isModalOpen) {
       document.body.style.overflow = 'hidden';
       document.body.classList.add('modal-open');
@@ -48,7 +47,6 @@ const Footer = () => {
     };
   }, [isModalOpen, location.pathname]);
 
-  // --- Fictitious Content ---
   const privacyPolicy = {
     title: 'Privacy Policy',
     content: (
@@ -74,7 +72,6 @@ const Footer = () => {
     )
   };
 
-  // --- Modal Logic ---
   const openModal = (content) => {
     setModalContent(content);
     setIsModalOpen(true);
@@ -88,10 +85,32 @@ const Footer = () => {
     gsap.to(window, { duration: 1, scrollTo: 0, ease: 'power2.inOut' });
   };
 
-  // En la home page, el marco Neo-Frame contiene los vértices perimetrales con copyright y navegación
   if (location.pathname === '/') {
     return null;
   }
+
+  const FooterColumn = ({ id, title, children }) => {
+    const isOpen = openSection === id;
+    return (
+      <div className="footer-column">
+        <button
+          className="footer-col-toggle"
+          onClick={() => toggleSection(id)}
+          aria-expanded={isOpen}
+          aria-controls={"footer-col-" + id}
+        >
+          <h5>{title}</h5>
+          <span className={"footer-chevron" + (isOpen ? " open" : "")} aria-hidden="true">&#8250;</span>
+        </button>
+        <div
+          id={"footer-col-" + id}
+          className={"footer-col-body" + (isOpen ? " open" : "")}
+        >
+          {children}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -99,28 +118,33 @@ const Footer = () => {
         <div className="footer-main-content">
           <div className="footer-logo-column">
             <div className="footer-logo-wrapper">
-              <img src={logoOnigashima} alt="Onigashima Store Logo" className="footer-logo" />
-              <p className='footer-logo-text'>Onigashima Store</p>
+              <div className="footer-logo-frame">
+                <img src="/onigashima_store_logo.avif" alt="Onigashima Store Logo" className="footer-logo" />
+              </div>
+              <div className="footer-brand-meta">
+                <p className="footer-logo-text">ONIGASHIMA</p>
+                <span className="footer-logo-sub">ARCHIVE // TOKYO &bull; SANTIAGO</span>
+              </div>
             </div>
-            <p className="footer-tagline">Your universe of anime collectibles</p>
+            <p className="footer-tagline">Curaduria oficial de figuras japonesas, reliquias de coleccion y ediciones limitadas directamente desde Akihabara.</p>
           </div>
-          <div className="footer-column">
-            <h5>Navigation</h5>
+
+          <FooterColumn id="nav" title="Navigation">
             <Link to="/">Home</Link>
             <Link to="/catalog">Catalog</Link>
             <Link to="/cart">Cart</Link>
-          </div>
-          <div className="footer-column">
-            <h5>Support</h5>
+          </FooterColumn>
+
+          <FooterColumn id="support" title="Support">
             <a href="#">FAQ</a>
-            <a href="#">Shipping & Returns</a>
+            <a href="#">Shipping &amp; Returns</a>
             <a href="#">Contact Us</a>
-          </div>
-          <div className="footer-column">
-            <h5>Legal</h5>
+          </FooterColumn>
+
+          <FooterColumn id="legal" title="Legal">
             <button className="footer-link-btn" onClick={() => openModal(privacyPolicy)}>Privacy Policy</button>
             <button className="footer-link-btn" onClick={() => openModal(termsOfUse)}>Terms of Use</button>
-          </div>
+          </FooterColumn>
         </div>
 
         <div className="footer-bottom">
@@ -130,7 +154,7 @@ const Footer = () => {
             <span>View Project on GitHub</span>
           </a>
         </div>
-        
+
         <div ref={scrollToTopRef} className="scroll-to-top" onClick={handleScrollToTop}>
           ^
         </div>

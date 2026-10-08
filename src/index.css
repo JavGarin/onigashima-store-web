@@ -47,23 +47,31 @@ code {
   font-family: var(--font-mono);
 }
 
-/* === Base Components === */
+/* === Base Components ===
+   container-section: padding-top usa --navbar-h para compensar el Navbar flotante.
+   La variable se actualiza en cada breakpoint en colors.css. */
 .container-section {
-  padding: 100px 20px 80px;
+  padding: var(--navbar-h, 92px) 20px 80px;
   max-width: 1280px;
   margin: 0 auto;
+}
+
+/* Clase genérica para páginas que no usan container-section
+   (ej: ProductDetail, Catalog wrapper, etc.) */
+.page-with-navbar {
+  padding-top: var(--navbar-h, 92px);
 }
 
 /* Padding responsivo para container-section en móvil */
 @media (max-width: 768px) {
   .container-section {
-    padding: 80px 16px 60px;
+    padding: var(--navbar-h, 92px) 16px 60px;
   }
 }
 
 @media (max-width: 480px) {
   .container-section {
-    padding: 72px 12px 48px;
+    padding: var(--navbar-h, 92px) 12px 48px;
   }
 }
 

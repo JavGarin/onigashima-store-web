@@ -406,7 +406,7 @@
 
 @media (max-width: 768px) {
   .navbar {
-    top: 15px;
+    top: 12px;
     width: 95%;
     min-width: 95%;
   }
@@ -423,11 +423,49 @@
   
   .menu-icon-trigger {
     display: flex;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
   }
   
   .navbar-container {
-    padding: 0 16px;
-    border-radius: 30px;
+    padding: 0 14px;
+    border-radius: 0px;
+  }
+
+  /* Badge del carrito — siempre visible en mobile */
+  .nav-cart-link {
+    padding: 6px 12px;
+  }
+}
+
+/* Mobile muy pequeño: Navbar pegado al borde superior, full-width */
+@media (max-width: 480px) {
+  .navbar {
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-width: 100%;
+    transform: none;
+    border-radius: 0;
+  }
+
+  .navbar-container {
+    max-width: 100%;
+    border-radius: 0px;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: none;
+    padding: 0 14px;
+    background: rgba(6, 6, 8, 0.97);
+  }
+
+  /* Quita el glow del logo en mobile para mejor rendimiento */
+  .navbar-logo-img {
+    filter: none;
   }
 }
 

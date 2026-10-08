@@ -1,7 +1,7 @@
 // Mock product data for demo purposes
 // This replaces Supabase data with local simulated products
 
-import figuraJoker from '../assets/img-products/figuraJoker.png';
+import artBookFantasyMagic from '../assets/img-products/artBookFantasyMagic.avif';
 import figuraLevi from '../assets/img-products/figuraLevi.png';
 import figuraLufy from '../assets/img-products/figuraLufy.png';
 import figuraNamiPirata from '../assets/img-products/figuraNamiPirata.png';
@@ -14,15 +14,15 @@ import figuraTurboman from '../assets/img-products/figuraTurboman.png';
 export const mockProducts = [
   {
     id: 1,
-    name: 'Joker Premium Figure',
-    description: 'Highly detailed Joker collectible figure featuring authentic costume design and premium paint application. Perfect for DC Comics enthusiasts and collectors. Includes display stand and interchangeable accessories.',
-    price: 79.99,
-    category: 'DC Comics',
-    stock: 15,
-    image_url: figuraJoker,
-    rating: 4.8,
-    reviews: 127,
-    tags: ['Best Seller', 'Premium'],
+    name: 'Art Book "Fantasy & Magic"',
+    description: 'Edición oficial de colección del Art Book "Fantasy & Magic". Incluye más de 250 páginas a todo color con ilustraciones exclusivas, arte conceptual, bocetos de producción y encuadernación de tapa dura de lujo con estampado foil dorado. Importado directamente desde Japón.',
+    price: 89000,
+    category: 'Libros y Mangas',
+    stock: 12,
+    image_url: artBookFantasyMagic,
+    rating: 4.9,
+    reviews: 84,
+    tags: ['Edición Deluxe', 'Novedad'],
     created_at: '2026-02-10T10:00:00Z'
   },
   {

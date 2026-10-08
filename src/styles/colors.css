@@ -40,6 +40,10 @@
   --frame-radius: 0px;
   --frame-padding: 16px;
 
+  /* === Altura total del Navbar flotante (height + top-offset + margen) ===
+     Usar como padding-top en páginas interiores para no quedar tapadas. */
+  --navbar-h: 92px;
+
   /* === 90s Japan Style Offset Shadows (Hard Shadows Táctiles) === */
   --retro-shadow-accent: 3px 3px 0px var(--color-accent);
   --retro-shadow-white: 3px 3px 0px #ffffff;
@@ -122,6 +126,7 @@
     --frame-inset: 16px;
     --frame-radius: 0px;
     --frame-padding: 24px;
+    --navbar-h: 96px;
   }
 }
 
@@ -130,5 +135,13 @@
     --frame-inset: 22px;
     --frame-radius: 0px;
     --frame-padding: 30px;
+    --navbar-h: 100px;
+  }
+}
+
+/* Mobile pequeño: Navbar full-width en top:0, sin offset flotante → navbar-h más corto */
+@media (max-width: 480px) {
+  :root {
+    --navbar-h: 68px;
   }
 }

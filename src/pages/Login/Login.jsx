@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Login.css';
-import logoOnigashima from '../../assets/img/logoOnigashimaStore.svg';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -45,7 +44,7 @@ const Login = () => {
   return (
     <div className="container-section login-container">
       <div className="login-form">
-        <img src={logoOnigashima} alt="Onigashima Store Logo" className="login-logo" />
+        <img src="/onigashima_store_logo.avif" alt="Onigashima Store Logo" className="login-logo" />
         <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
