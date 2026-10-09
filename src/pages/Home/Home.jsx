@@ -30,11 +30,11 @@ const Home = () => {
   const panelsData = {
     about: {
       title: 'Acerca de Onigashima',
-      body: 'Onigashima Store es un espacio de curaduría dedicado a coleccionistas exigentes. Cada figura y reliquia es importada directamente desde Akihabara y los estudios de animación más prestigiosos de Japón, garantizando sellos de autenticidad TOEI, Kotobukiya, Bandai Spirits y Good Smile Company.'
+      body: 'Onigashima Store es una tienda internacional de venta de figuras y productos de autor coleccionables y oficiales premium, con envíos a todo el mundo. Garantizamos sellos de autenticidad TOEI, Kotobukiya, Bandai Spirits y Good Smile Company.'
     },
     shipping: {
-      title: 'Autenticidad & Envíos',
-      body: 'Empacamos cada pieza con protección de grado coleccionista (cajas dobles de alto impacto y sellado hidrófugo). Envíos exprés nacionales e internacionales con número de rastreo prioritario y seguro contra daños al 100% del valor declarado.'
+      title: 'Importación & Envíos Globales',
+      body: 'Empacamos cada pieza con protección de grado coleccionista (cajas dobles de alto impacto y sellado hidrófugo). Envíos exprés a todo el mundo con número de rastreo prioritario y seguro contra daños al 100% del valor declarado.'
     },
     contact: {
       title: 'Contacto & Atención',
@@ -324,6 +324,30 @@ const Home = () => {
           {/* Área Central: Hero Statement, Logotipo Maestro & Carrusel con Corte Diagonal */}
           <section className="hero-center-showcase">
             <div className="hero-identity-grid">
+              {/* HUD Video Player — Overlay flotante absoluto en esquina superior derecha */}
+              <div className="hero-video-hud" aria-label="Controles del video de fondo">
+                <span className={`video-hud-pulse ${isVideoPlaying ? 'playing' : 'paused'}`} />
+                <span className="video-hud-feed">
+                  {isVideoPlaying ? `CLIP 0${currentVideoIndex + 1}` : 'PAUSA'}
+                </span>
+                <button 
+                  type="button" 
+                  onClick={togglePlayVideo}
+                  className="video-hud-btn"
+                  aria-label={isVideoPlaying ? "Pausar video" : "Reproducir video"}
+                >
+                  {isVideoPlaying ? '❚❚' : '▶'}
+                </button>
+                <button 
+                  type="button" 
+                  onClick={cycleVideoClip}
+                  className="video-hud-btn video-hud-btn-switch"
+                  aria-label="Cambiar siguiente clip de video"
+                >
+                  ⇄ CLIP
+                </button>
+              </div>
+
               {/* Logotipo Maestro de Gran Formato en el Hero */}
               <div className="hero-logo-showcase" aria-label="Logotipo oficial de Onigashima Store">
                 <div className="hero-logo-frame">
@@ -344,47 +368,23 @@ const Home = () => {
                 <div className="hero-logo-subtag">
                   <span className="subtag-jp">鬼ヶ島</span>
                   <span className="subtag-dot" />
-                  <span className="subtag-edition">ARCHIVE 2026</span>
+                  <span className="subtag-edition">Onigashima Store 2026</span>
                 </div>
               </div>
 
-              {/* Contenido Tipográfico & HUD de Control de Video */}
+              {/* Contenido Tipográfico */}
               <div className="hero-copy-block">
                 <div className="showcase-headline">
                   <div className="headline-meta-row">
-                    <span className="headline-meta">// CURATED JAPANESE DROPS</span>
+                    <span className="headline-meta">// TIENDA INTERNACIONAL</span>
                     <span className="headline-badge">EDICIÓN DE COLECCIÓN</span>
-
-                    {/* HUD Video Player Control Confinado y Compacto */}
-                    <div className="hero-video-hud" aria-label="Controles del video de fondo">
-                      <span className={`video-hud-pulse ${isVideoPlaying ? 'playing' : 'paused'}`} />
-                      <span className="video-hud-feed">
-                        {isVideoPlaying ? `CLIP 0${currentVideoIndex + 1}` : 'PAUSA'}
-                      </span>
-                      <button 
-                        type="button" 
-                        onClick={togglePlayVideo}
-                        className="video-hud-btn"
-                        aria-label={isVideoPlaying ? "Pausar video" : "Reproducir video"}
-                      >
-                        {isVideoPlaying ? '❚❚' : '▶'}
-                      </button>
-                      <button 
-                        type="button" 
-                        onClick={cycleVideoClip}
-                        className="video-hud-btn video-hud-btn-switch"
-                        aria-label="Cambiar siguiente clip de video"
-                      >
-                        ⇄ CLIP
-                      </button>
-                    </div>
                   </div>
 
                   <h2 className="headline-title">
-                    Autenticidad pura traída desde <span className="title-accent">Akihabara</span>.
+                    Figuras y productos de autor <span className="title-accent">oficiales premium</span>.
                   </h2>
                   <p className="headline-subtitle-desc">
-                    Figuras de archivo oficial y reliquias exclusivas importadas directamente desde los estudios más prestigiosos de Japón.
+                    Importación oficial de figuras y coleccionables exclusivos con envíos a todo el mundo.
                   </p>
                 </div>
               </div>
@@ -584,7 +584,7 @@ const Home = () => {
           {/* Vértice Inferior: Marca de agua técnica */}
           <div className="frame-watermark">
             <span>ONIGASHIMA STORE® // TOKYO • SANTIAGO</span>
-            <span className="watermark-sub">EDICIÓN LIMITADA & ARCHIVO OFICIAL 2026</span>
+            <span className="watermark-sub">EDICIÓN LIMITADA & ONIGASHIMA STORE 2026</span>
           </div>
 
         </div>

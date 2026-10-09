@@ -123,10 +123,10 @@ const Footer = () => {
               </div>
               <div className="footer-brand-meta">
                 <p className="footer-logo-text">ONIGASHIMA</p>
-                <span className="footer-logo-sub">ARCHIVE // TOKYO &bull; SANTIAGO</span>
+                <span className="footer-logo-sub">ONIGASHIMA STORE 2026 // WORLDWIDE</span>
               </div>
             </div>
-            <p className="footer-tagline">Curaduria oficial de figuras japonesas, reliquias de coleccion y ediciones limitadas directamente desde Akihabara.</p>
+            <p className="footer-tagline">Tienda internacional de venta de figuras y productos de autor coleccionables y oficiales premium con envíos a todo el mundo.</p>
           </div>
 
           <FooterColumn id="nav" title="Navigation">

@@ -7,7 +7,20 @@ const ProductCard = ({ product, addToCart }) => {
     <div className="product-card">
       <Link to={`/catalog/${product.id}`} className="product-link">
         <div className="product-image-container">
-          <img src={product.image_url} alt={product.name} loading="lazy" />
+          <img
+            src={product.image_url}
+            alt={product.name}
+            loading="lazy"
+            className="product-img-primary"
+          />
+          {product.image_url_2 && (
+            <img
+              src={product.image_url_2}
+              alt={`${product.name} — vista alternativa`}
+              loading="lazy"
+              className="product-img-secondary"
+            />
+          )}
           <span className="product-card-category">{product.category}</span>
           {product.tags && product.tags.length > 0 && (
             <span className="product-card-tag">{product.tags[0]}</span>

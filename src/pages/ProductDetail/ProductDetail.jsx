@@ -4,6 +4,17 @@ import { getProductById, mockProducts } from '../../data/mockProducts';
 import { useCart } from '../../context/CartContext';
 import './ProductDetail.css';
 
+const globalSatisfactionReviews = [
+  { id: 1, flag: '🇯🇵', user: 'Haruto S.', location: 'Tokio, Japón', text: '造形も塗装も完璧。梱包も丁寧で感動しました！' },
+  { id: 2, flag: '🇺🇸', user: 'Marcus K.', location: 'Nueva York, EE. UU.', text: 'Museum-grade detail. Fast priority international shipping.' },
+  { id: 3, flag: '🇨🇱', user: 'Valentina R.', location: 'Santiago, Chile', text: 'Llegó impecable y protegido, 100% original con sello oficial.' },
+  { id: 4, flag: '🇫🇷', user: 'Alexandre B.', location: 'París, Francia', text: 'Détails époustouflants, la véritable pièce maîtresse !' },
+  { id: 5, flag: '🇩🇪', user: 'Lukas M.', location: 'Berlín, Alemania', text: 'Unglaubliche Qualität und absolut bombensichere Verpackung.' },
+  { id: 6, flag: '🇮🇹', user: 'Giulia C.', location: 'Milán, Italia', text: 'Arrivato perfetto in pochissimi giorni. Semplicemente magnifica!' },
+  { id: 7, flag: '🇰🇷', user: 'Min-Jun P.', location: 'Seúl, Corea del Sur', text: '마감과 디테일이 예술입니다. 소장 가치 100% 만족!' },
+  { id: 8, flag: '🇧🇷', user: 'Lucas S.', location: 'São Paulo, Brasil', text: 'Chegou super rápido no Brasil e perfeitamente protegido.' },
+];
+
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -12,8 +23,29 @@ const ProductDetail = () => {
   const [error, setError] = useState(null);
   const [addedState, setAddedState] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [activeImage, setActiveImage] = useState(0);
+  const [reviewIndex, setReviewIndex] = useState(0);
+  const [isReviewPaused, setIsReviewPaused] = useState(false);
   const { addToCart } = useCart();
   const imgRef = useRef(null);
+
+  useEffect(() => {
+    if (isReviewPaused) return;
+    const interval = setInterval(() => {
+      setReviewIndex((prev) => (prev + 1) % globalSatisfactionReviews.length);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isReviewPaused]);
+
+  // Construir array de imágenes disponibles del producto
+  const productImages = product
+    ? [
+        { src: product.image_url, label: 'Vista 01' },
+        ...(product.image_url_2
+          ? [{ src: product.image_url_2, label: 'Vista 02' }]
+          : []),
+      ]
+    : [];
 
   const relatedProducts = product
     ? mockProducts.filter((p) => p.id !== product.id).slice(0, 3)
@@ -24,6 +56,7 @@ const ProductDetail = () => {
       try {
         setLoading(true);
         setImageLoaded(false);
+        setActiveImage(0);
         await new Promise((resolve) => setTimeout(resolve, 280));
         const found = getProductById(id);
         if (found) {
@@ -52,7 +85,7 @@ const ProductDetail = () => {
       <div className="pd-root">
         <div className="pd-loading-screen">
           <div className="pd-loading-spinner" aria-label="Cargando producto" />
-          <span className="pd-loading-label">CARGANDO ARCHIVO...</span>
+          <span className="pd-loading-label">CARGANDO PRODUCTO...</span>
         </div>
       </div>
     );
@@ -107,7 +140,7 @@ const ProductDetail = () => {
         </div>
         <div className="pd-hud-right">
           <span className="pd-hud-live-dot" aria-hidden="true" />
-          <span className="pd-hud-archive">ARCHIVO &middot; 2026</span>
+          <span className="pd-hud-archive">Onigashima Store 2026</span>
         </div>
       </header>
 
@@ -121,7 +154,7 @@ const ProductDetail = () => {
             <div className={"pd-image-wrap" + (imageLoaded ? " loaded" : "")}>
               <img
                 ref={imgRef}
-                src={product.image_url}
+                src={productImages[activeImage]?.src || product.image_url}
                 alt={product.name}
                 className="pd-product-img"
                 onLoad={() => setImageLoaded(true)}
@@ -132,7 +165,88 @@ const ProductDetail = () => {
             {product.tags && product.tags[0] && (
               <span className="pd-img-badge-tag">{product.tags[0]}</span>
             )}
+            {/* Indicador de vista activa */}
+            {productImages.length > 1 && (
+              <span className="pd-img-view-badge" aria-live="polite">
+                {productImages[activeImage]?.label}
+              </span>
+            )}
           </div>
+
+          {/* Fila con elementos de vista de imágenes y carrusel minimalista transparente de satisfacción */}
+          <div className="pd-views-strip">
+            {productImages.length > 1 && (
+              <div className="pd-gallery-thumbs" role="list" aria-label="Galería de imágenes del producto">
+                {productImages.map((img, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    role="listitem"
+                    className={"pd-thumb-btn" + (activeImage === i ? " active" : "")}
+                    onClick={() => { setActiveImage(i); setImageLoaded(false); }}
+                    aria-label={`Ver ${img.label}`}
+                    aria-pressed={activeImage === i}
+                  >
+                    <img
+                      src={img.src}
+                      alt={img.label}
+                      className="pd-thumb-img"
+                      loading="lazy"
+                    />
+                    <span className="pd-thumb-label">{img.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Carrusel minimalista transparente de satisfacción global */}
+            <aside
+              className="pd-reviews-carousel"
+              onMouseEnter={() => setIsReviewPaused(true)}
+              onMouseLeave={() => setIsReviewPaused(false)}
+              aria-label="Comentarios de satisfacción de clientes globales"
+            >
+              <div className="pd-rev-header">
+                <div className="pd-rev-badge">
+                  <span className="pd-rev-live-dot" aria-hidden="true" />
+                  <span className="pd-rev-badge-txt">SATISFACCIÓN GLOBAL</span>
+                </div>
+                <div className="pd-rev-nav">
+                  <button
+                    type="button"
+                    className="pd-rev-arrow"
+                    onClick={() => setReviewIndex((prev) => (prev - 1 + globalSatisfactionReviews.length) % globalSatisfactionReviews.length)}
+                    aria-label="Comentario anterior"
+                  >
+                    &#8249;
+                  </button>
+                  <span className="pd-rev-counter">
+                    {String(reviewIndex + 1).padStart(2, '0')}/{String(globalSatisfactionReviews.length).padStart(2, '0')}
+                  </span>
+                  <button
+                    type="button"
+                    className="pd-rev-arrow"
+                    onClick={() => setReviewIndex((prev) => (prev + 1) % globalSatisfactionReviews.length)}
+                    aria-label="Siguiente comentario"
+                  >
+                    &#8250;
+                  </button>
+                </div>
+              </div>
+
+              <div className="pd-rev-body" key={reviewIndex}>
+                <p className="pd-rev-quote">"{globalSatisfactionReviews[reviewIndex].text}"</p>
+                <div className="pd-rev-meta">
+                  <span className="pd-rev-stars">★★★★★</span>
+                  <span className="pd-rev-user">
+                    {globalSatisfactionReviews[reviewIndex].flag} {globalSatisfactionReviews[reviewIndex].user}
+                  </span>
+                  <span className="pd-rev-city">&middot; {globalSatisfactionReviews[reviewIndex].location}</span>
+                </div>
+              </div>
+            </aside>
+          </div>
+
           {product.tags && product.tags.length > 1 && (
             <div className="pd-tags-row">
               {product.tags.map((tag, i) => (
@@ -214,7 +328,7 @@ const ProductDetail = () => {
           <div className="pd-auth-strip">
             <span className="pd-auth-icon">&#128737;</span>
             <span className="pd-auth-text">
-              Autenticidad garantizada &middot; Importado desde Japon &middot; Sello oficial verificado
+              Importación oficial &middot; Figuras y productos de autor coleccionables premium &middot; Envíos a todo el mundo
             </span>
           </div>
         </section>
@@ -258,7 +372,7 @@ const ProductDetail = () => {
 
       <div className="pd-watermark" aria-hidden="true">
         <span>ONIGASHIMA STORE&#174; // TOKYO &middot; SANTIAGO</span>
-        <span className="pd-watermark-sub">EDICION LIMITADA &amp; ARCHIVO OFICIAL 2026</span>
+        <span className="pd-watermark-sub">EDICION LIMITADA &amp; ONIGASHIMA STORE 2026</span>
       </div>
     </div>
   );

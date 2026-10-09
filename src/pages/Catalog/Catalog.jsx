@@ -17,6 +17,7 @@ const Catalog = () => {
   const [error, setError] = useState(null);
   const { addToCart } = useCart();
   const comp = useRef(null);
+  const [showScrollHint, setShowScrollHint] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -42,6 +43,17 @@ const Catalog = () => {
     };
 
     fetchProducts();
+  }, []);
+
+  // Ocultar el indicador de scroll cuando el usuario comienza a hacer scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      setShowScrollHint(scrollY < 80);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Filter products when selectedCategory changes
@@ -76,16 +88,16 @@ const Catalog = () => {
   }
 
   return (
-    <div className="container-section catalog-section" ref={comp}>
+    <div className="container-section catalog-section" ref={comp} style={{ position: 'relative' }}>
       <div className="catalog-content" style={{ visibility: loading && !products.length ? 'hidden' : 'visible' }}>
         <div className="catalog-header">
-          <span className="catalog-header-badge">// ARCHIVE COLLECTION 2026</span>
+          <span className="catalog-header-badge">// Onigashima Store 2026</span>
           <div className="catalog-title-wrap">
             <img src="/onigashima_store_logo.avif" alt="Onigashima Store Logo" className="catalog-logo" />
             <h2>Curated Archive Catalog</h2>
           </div>
         </div>
-        <p className="catalog-intro">Explore our full collection of authentic Japanese figures and limited editions.</p>
+        <p className="catalog-intro">Tienda internacional de figuras y productos de autor coleccionables oficiales premium con envíos a todo el mundo.</p>
         
         {/* Category Filter Bar */}
         <div className="category-filter">
@@ -118,6 +130,26 @@ const Catalog = () => {
             )}
           </div>
         )}
+      </div>
+
+      {/* Indicador de Scroll */}
+      <div
+        className="catalog-scroll-indicator"
+        style={{
+          opacity: showScrollHint ? 1 : 0,
+          pointerEvents: 'none',
+          transition: 'opacity 0.5s ease',
+        }}
+        aria-hidden="true"
+      >
+        <span className="scroll-hint-label">SCROLL</span>
+        <div className="scroll-hint-arrow">
+          <svg width="16" height="22" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5.5" y="0.5" width="5" height="9" rx="2.5" stroke="currentColor" strokeWidth="1.2"/>
+            <line x1="8" y1="3" x2="8" y2="5.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+            <path d="M1 15l7 6 7-6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
       </div>
     </div>
   );

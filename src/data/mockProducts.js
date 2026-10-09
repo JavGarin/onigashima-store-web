@@ -2,14 +2,17 @@
 // This replaces Supabase data with local simulated products
 
 import artBookFantasyMagic from '../assets/img-products/artBookFantasyMagic.avif';
-import figuraLevi from '../assets/img-products/figuraLevi.png';
-import figuraLufy from '../assets/img-products/figuraLufy.png';
-import figuraNamiPirata from '../assets/img-products/figuraNamiPirata.png';
-import figuraOptimusPrime from '../assets/img-products/figuraOptimusPrime.png';
-import figuraPowerCsm from '../assets/img-products/figuraPowerCsm.png';
-import figuraSpiderman from '../assets/img-products/figuraSpiderman.png';
-import figuraSungJinWoo from '../assets/img-products/figuraSungJinWoo.png';
-import figuraTurboman from '../assets/img-products/figuraTurboman.png';
+import artBookFantasyMagic2 from '../assets/img-products/artBookFantasyMagic_2.avif';
+import aventuraRpgColeccionista from '../assets/img-products/Aventura_RPG_Edición_Coleccionista_2.avif';
+import aventuraRpgColeccionistaGuys from '../assets/img-products/Aventura_RPG_Edición_Coleccionista_guys.avif';
+import luffyGear5_1 from '../assets/img-products/luffy_gear5_1.avif';
+import luffyGear5_2 from '../assets/img-products/luffy_gear5_2.avif';
+import namiPirate1 from '../assets/img-products/nami_pirate1.avif';
+import namiPirate2 from '../assets/img-products/nami_pirate2.avif';
+import gundamWing1 from '../assets/img-products/Mobile_Suit_Gundam_Wing1.avif';
+import gundamWing2 from '../assets/img-products/Mobile_Suit_Gundam_Wing2_converted.avif';
+import powerCsm1 from '../assets/img-products/power_csm1_converted.avif';
+import powerCsm2 from '../assets/img-products/power_csm2_converted.avif';
 
 export const mockProducts = [
   {
@@ -20,6 +23,7 @@ export const mockProducts = [
     category: 'Libros y Mangas',
     stock: 12,
     image_url: artBookFantasyMagic,
+    image_url_2: artBookFantasyMagic2,
     rating: 4.9,
     reviews: 84,
     tags: ['Edición Deluxe', 'Novedad'],
@@ -27,107 +31,73 @@ export const mockProducts = [
   },
   {
     id: 2,
-    name: 'Levi Ackerman Attack on Titan',
-    description: 'Captain Levi in his iconic Survey Corps uniform. Masterfully crafted with exceptional attention to detail, featuring his signature blades and ODM gear. A must-have for Attack on Titan fans.',
-    price: 69.99,
-    category: 'Anime',
-    stock: 22,
-    image_url: figuraLevi,
+    name: 'Aventura RPG: Edición Coleccionista',
+    description: 'Juego de mesa de fantasía épica y rol táctico. Incluye un tablero modular de alta calidad, más de 40 miniaturas de héroes y criaturas míticas, 200+ cartas de hechizos y equipo, dados personalizados y un libro de misiones con campañas ramificadas. Diseñado para 1 a 5 jugadores.',
+    price: 79990,
+    category: 'Juegos de Mesa',
+    stock: 15,
+    image_url: aventuraRpgColeccionista,
+    image_url_2: aventuraRpgColeccionistaGuys,
     rating: 4.9,
-    reviews: 203,
-    tags: ['New Arrival', 'Fan Favorite'],
+    reviews: 142,
+    tags: ['Edición Coleccionista', 'Fantasía Épica'],
     created_at: '2026-02-09T14:30:00Z'
   },
   {
     id: 3,
-    name: 'Monkey D. Luffy Gear 5',
-    description: 'The legendary Straw Hat Captain in his ultimate form! This stunning figure captures Luffy\'s Gear 5 transformation with dynamic pose and vibrant colors. Premium quality construction with meticulous detailing.',
-    price: 89.99,
+    name: 'Monkey D. Luffy Gear 5 - "Sun God Nika"',
+    description: 'Estatua de colección premium que captura a Monkey D. Luffy en su despertar definitivo: Gear 5, el Dios del Sol Nika. Fabricada con resina y PVC de alta definición, efectos de humo y nubes traslúcidas con acabado perlado, relámpagos dinámicos y base diorámica temática. Incluye piezas intercambiables.',
+    price: 94990,
     category: 'Anime',
     stock: 8,
-    image_url: figuraLufy,
+    image_url: luffyGear5_1,
+    image_url_2: luffyGear5_2,
     rating: 5.0,
     reviews: 312,
-    tags: ['Limited Edition', 'Best Seller'],
+    tags: ['Edición Limitada', 'Best Seller'],
     created_at: '2026-02-08T09:15:00Z'
   },
   {
     id: 4,
-    name: 'Nami Pirate Warrior Edition',
-    description: 'The Navigator of the Straw Hat Pirates in her battle-ready outfit. Features her iconic Clima-Tact weapon and fierce expression. Exceptional paint work and sculpting quality.',
-    price: 64.99,
+    name: 'Nami - Cat Burglar "Pirate Warrior"',
+    description: 'Figura de colección de Nami, la astuta navegante de los Sombrero de Paja. Presentada en su icónica pose de combate portando una espada de bucanera, con escultura dinámica en su cabello y vestimenta, acabados de pintura de alta fidelidad y base con efectos marinos.',
+    price: 68990,
     category: 'Anime',
     stock: 18,
-    image_url: figuraNamiPirata,
-    rating: 4.7,
+    image_url: namiPirate1,
+    image_url_2: namiPirate2,
+    rating: 4.8,
     reviews: 156,
-    tags: ['New Arrival'],
+    tags: ['Edición Coleccionista', 'Novedad'],
     created_at: '2026-02-07T16:45:00Z'
   },
   {
     id: 5,
-    name: 'Optimus Prime Masterpiece',
-    description: 'The legendary Autobot leader in all his glory. This masterpiece edition features premium die-cast parts, intricate transformation mechanism, and movie-accurate details. A centerpiece for any Transformers collection.',
-    price: 149.99,
-    category: 'Transformers',
-    stock: 5,
-    image_url: figuraOptimusPrime,
+    name: 'Mobile Suit Gundam Wing Zero - Master Grade',
+    description: 'Figura mecha de alta fidelidad del legendario Wing Gundam Zero (Endless Waltz). Cuenta con estructura interna articulada con piezas die-cast, alas emplumadas desplegables con apertura múltiple, Twin Buster Rifle combinable, sables de haz de energía y base expositora con soporte para vuelo dinámico.',
+    price: 129990,
+    category: 'Mecha',
+    stock: 6,
+    image_url: gundamWing1,
+    image_url_2: gundamWing2,
     rating: 4.9,
-    reviews: 89,
-    tags: ['Premium', 'Limited Edition'],
+    reviews: 98,
+    tags: ['Edición Master Grade', 'Mecha'],
     created_at: '2026-02-06T11:20:00Z'
   },
   {
     id: 6,
-    name: 'Power Chainsaw Man Figure',
-    description: 'The Blood Fiend in her iconic look! Captures Power\'s chaotic energy and distinctive personality. High-quality sculpting with vibrant colors and dynamic pose. Includes her signature horns and menacing expression.',
-    price: 74.99,
+    name: 'Power - Blood Fiend Chainsaw Man',
+    description: 'Figura oficial de colección de Power, la Mujer Demonio de Sangre de Chainsaw Man. Esculpida capturando su energía caótica y expresión desafiante, con sus cuernos carmesí característicos, acabados de pintura de alta gama y base temática.',
+    price: 58990,
     category: 'Anime',
     stock: 12,
-    image_url: figuraPowerCsm,
+    image_url: powerCsm1,
+    image_url_2: powerCsm2,
     rating: 4.8,
     reviews: 178,
     tags: ['Best Seller', 'Trending'],
     created_at: '2026-02-05T13:00:00Z'
-  },
-  {
-    id: 7,
-    name: 'Spider-Man Web Slinger Deluxe',
-    description: 'Your friendly neighborhood Spider-Man in an action-packed pose! Features detailed web effects, interchangeable hands, and premium articulation. Perfect for Marvel collectors and Spidey fans.',
-    price: 59.99,
-    category: 'Marvel',
-    stock: 25,
-    image_url: figuraSpiderman,
-    rating: 4.6,
-    reviews: 241,
-    tags: ['Fan Favorite'],
-    created_at: '2026-02-04T08:30:00Z'
-  },
-  {
-    id: 8,
-    name: 'Sung Jin-Woo Shadow Monarch',
-    description: 'The Shadow Monarch himself! This premium figure showcases Sung Jin-Woo in his powerful Shadow Monarch form with glowing effects and dramatic pose. Exceptional detail and craftsmanship from Solo Leveling.',
-    price: 94.99,
-    category: 'Anime',
-    stock: 7,
-    image_url: figuraSungJinWoo,
-    rating: 5.0,
-    reviews: 267,
-    tags: ['Limited Edition', 'Premium', 'Best Seller'],
-    created_at: '2026-02-03T15:45:00Z'
-  },
-  {
-    id: 9,
-    name: 'Turboman Action Hero Classic',
-    description: 'The ultimate action hero from the classic film! Retro-styled collectible with authentic details and nostalgic charm. Features iconic costume and heroic pose. A perfect addition to any vintage toy collection.',
-    price: 54.99,
-    category: 'Retro',
-    stock: 14,
-    image_url: figuraTurboman,
-    rating: 4.5,
-    reviews: 92,
-    tags: ['Retro Classic'],
-    created_at: '2026-02-02T12:00:00Z'
   }
 ];
 
@@ -137,7 +107,7 @@ export const getProductById = (id) => {
 };
 
 // Helper function to get featured products (first N products)
-export const getFeaturedProducts = (limit = 5) => {
+export const getFeaturedProducts = (limit = 6) => {
   return mockProducts.slice(0, limit);
 };
 
@@ -150,17 +120,6 @@ export const getAllProducts = () => {
 export const getAllCategories = () => {
   const categories = ['All', ...new Set(mockProducts.map(product => product.category))];
   return categories;
-};
-
-// Helper function to get paginated products
-export const getPaginatedProducts = (page = 0, perPage = 8) => {
-  const start = page * perPage;
-  const end = start + perPage;
-  return {
-    products: mockProducts.slice(start, end),
-    total: mockProducts.length,
-    hasMore: end < mockProducts.length
-  };
 };
 
 export default mockProducts;
