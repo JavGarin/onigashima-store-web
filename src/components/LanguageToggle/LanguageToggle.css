@@ -1,0 +1,78 @@
+/* =========================================================
+   LanguageToggle HUD - Sutil & Moderno (Onigashima 2026)
+   ========================================================= */
+
+.lang-toggle-hud {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(10, 10, 16, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  user-select: none;
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.lang-toggle-hud:hover {
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+}
+
+.lang-hud-icon {
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.55);
+  margin-right: 2px;
+  transition: color var(--transition-fast);
+}
+
+.lang-toggle-hud:hover .lang-hud-icon {
+  color: var(--color-accent);
+}
+
+.lang-btn {
+  background: transparent;
+  border: none;
+  padding: 1px 4px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  border-radius: 0px;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  line-height: 1;
+}
+
+.lang-btn:hover {
+  color: var(--color-white);
+}
+
+.lang-btn.active {
+  color: var(--color-white);
+  font-weight: 900;
+  position: relative;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+.lang-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 2px;
+  right: 2px;
+  height: 1.5px;
+  background: var(--color-accent);
+  box-shadow: 0 0 6px var(--color-accent);
+}
+
+.lang-hud-sep {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.65rem;
+  font-weight: 400;
+}

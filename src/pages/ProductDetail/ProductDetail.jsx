@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { getProductById, mockProducts } from '../../data/mockProducts';
 import { useCart } from '../../context/CartContext';
 import './ProductDetail.css';
@@ -16,6 +17,9 @@ const globalSatisfactionReviews = [
 ];
 
 const ProductDetail = () => {
+  const { t, i18n } = useTranslation();
+  const isEn = (i18n.resolvedLanguage || i18n.language || 'es').startsWith('en');
+
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
@@ -37,12 +41,12 @@ const ProductDetail = () => {
     return () => clearInterval(interval);
   }, [isReviewPaused]);
 
-  // Construir array de imágenes disponibles del producto
+  // Construir array de imágenes disponibles del producto con etiquetas traducidas
   const productImages = product
     ? [
-        { src: product.image_url, label: 'Vista 01' },
+        { src: product.image_url, label: t('productDetail.view01') },
         ...(product.image_url_2
-          ? [{ src: product.image_url_2, label: 'Vista 02' }]
+          ? [{ src: product.image_url_2, label: t('productDetail.view02') }]
           : []),
       ]
     : [];
@@ -85,7 +89,7 @@ const ProductDetail = () => {
       <div className="pd-root">
         <div className="pd-loading-screen">
           <div className="pd-loading-spinner" aria-label="Cargando producto" />
-          <span className="pd-loading-label">CARGANDO PRODUCTO...</span>
+          <span className="pd-loading-label">{t('productDetail.loading')}</span>
         </div>
       </div>
     );
@@ -96,24 +100,24 @@ const ProductDetail = () => {
       <div className="pd-root">
         <div className="pd-error-screen">
           <span className="pd-error-code">404</span>
-          <h2 className="pd-error-title">Pieza No Encontrada</h2>
+          <h2 className="pd-error-title">{t('productDetail.notFound')}</h2>
           <p className="pd-error-desc">{error}</p>
           <Link to="/catalog" className="pd-btn-back-catalog">
-            Volver al Catalogo
+            {t('productDetail.backToCatalog')}
           </Link>
         </div>
       </div>
     );
   }
 
+  const productName = (isEn && product.name_en) ? product.name_en : product.name;
+  const productDesc = (isEn && product.description_en) ? product.description_en : product.description;
+  const productCat = t(`catalog.categories.${product.category}`, product.category);
+  const productTags = (isEn && product.tags_en) ? product.tags_en : product.tags;
+
   const stockLevel =
     product.stock > 15 ? 'high' : product.stock > 5 ? 'mid' : 'low';
-  const stockLabel =
-    stockLevel === 'high'
-      ? 'Disponible'
-      : stockLevel === 'mid'
-      ? 'Stock Limitado'
-      : 'Ultimas Unidades';
+  const stockLabel = t(`productDetail.stockStatus.${stockLevel}`);
 
   return (
     <div className="pd-root">
@@ -127,16 +131,16 @@ const ProductDetail = () => {
           type="button"
           className="pd-back-btn"
           onClick={() => navigate(-1)}
-          aria-label="Volver atras"
+          aria-label={t('productDetail.back')}
         >
-          &larr; ATRAS
+          {t('productDetail.back')}
         </button>
         <div className="pd-hud-breadcrumb">
-          <Link to="/" className="pd-hud-crumb-link">INICIO</Link>
+          <Link to="/" className="pd-hud-crumb-link">{t('productDetail.breadcrumbHome')}</Link>
           <span className="pd-hud-crumb-sep">/</span>
-          <Link to="/catalog" className="pd-hud-crumb-link">CATALOGO</Link>
+          <Link to="/catalog" className="pd-hud-crumb-link">{t('productDetail.breadcrumbCatalog')}</Link>
           <span className="pd-hud-crumb-sep">/</span>
-          <span className="pd-hud-crumb-active">{product.category.toUpperCase()}</span>
+          <span className="pd-hud-crumb-active">{productCat.toUpperCase()}</span>
         </div>
         <div className="pd-hud-right">
           <span className="pd-hud-live-dot" aria-hidden="true" />
@@ -155,15 +159,15 @@ const ProductDetail = () => {
               <img
                 ref={imgRef}
                 src={productImages[activeImage]?.src || product.image_url}
-                alt={product.name}
+                alt={productName}
                 className="pd-product-img"
                 onLoad={() => setImageLoaded(true)}
                 loading="eager"
               />
             </div>
-            <span className="pd-img-badge-cat">{product.category}</span>
-            {product.tags && product.tags[0] && (
-              <span className="pd-img-badge-tag">{product.tags[0]}</span>
+            <span className="pd-img-badge-cat">{productCat}</span>
+            {productTags && productTags[0] && (
+              <span className="pd-img-badge-tag">{productTags[0]}</span>
             )}
             {/* Indicador de vista activa */}
             {productImages.length > 1 && (
@@ -209,7 +213,7 @@ const ProductDetail = () => {
               <div className="pd-rev-header">
                 <div className="pd-rev-badge">
                   <span className="pd-rev-live-dot" aria-hidden="true" />
-                  <span className="pd-rev-badge-txt">SATISFACCIÓN GLOBAL</span>
+                  <span className="pd-rev-badge-txt">{t('productDetail.globalSatisfaction')}</span>
                 </div>
                 <div className="pd-rev-nav">
                   <button
@@ -247,9 +251,9 @@ const ProductDetail = () => {
             </aside>
           </div>
 
-          {product.tags && product.tags.length > 1 && (
+          {productTags && productTags.length > 1 && (
             <div className="pd-tags-row">
-              {product.tags.map((tag, i) => (
+              {productTags.map((tag, i) => (
                 <span key={i} className="pd-tag-chip">{tag}</span>
               ))}
             </div>
@@ -258,8 +262,8 @@ const ProductDetail = () => {
 
         <section className="pd-info-panel" aria-label="Informacion del producto">
           <div className="pd-info-head">
-            <span className="pd-info-category">{product.category.toUpperCase()}</span>
-            <h1 className="pd-info-title">{product.name}</h1>
+            <span className="pd-info-category">{productCat.toUpperCase()}</span>
+            <h1 className="pd-info-title">{productName}</h1>
           </div>
 
           <div className="pd-rating-row" aria-label={"Valoracion: " + product.rating + " de 5"}>
@@ -274,27 +278,27 @@ const ProductDetail = () => {
               ))}
             </div>
             <span className="pd-rating-score">{product.rating}</span>
-            <span className="pd-rating-reviews">({product.reviews} resenas)</span>
+            <span className="pd-rating-reviews">({t('productDetail.reviewsCount', { count: product.reviews })})</span>
           </div>
 
-          <p className="pd-description">{product.description}</p>
+          <p className="pd-description">{productDesc}</p>
 
           <div className="pd-section-divider" aria-hidden="true" />
 
           <div className="pd-meta-grid">
             <div className="pd-meta-item">
-              <span className="pd-meta-label">ESTADO</span>
+              <span className="pd-meta-label">{t('productDetail.status')}</span>
               <span className={"pd-meta-value pd-stock-" + stockLevel}>
                 <span className="pd-stock-dot" aria-hidden="true" />
                 {stockLabel}
               </span>
             </div>
             <div className="pd-meta-item">
-              <span className="pd-meta-label">UNIDADES</span>
-              <span className="pd-meta-value">{product.stock} disp.</span>
+              <span className="pd-meta-label">{t('productDetail.units')}</span>
+              <span className="pd-meta-value">{product.stock} {t('productDetail.availableShort')}</span>
             </div>
             <div className="pd-meta-item">
-              <span className="pd-meta-label">ID REF</span>
+              <span className="pd-meta-label">{t('productDetail.refId')}</span>
               <span className="pd-meta-value pd-meta-mono">#ONI-{String(product.id).padStart(4, '0')}</span>
             </div>
           </div>
@@ -303,21 +307,21 @@ const ProductDetail = () => {
 
           <div className="pd-purchase-block">
             <div className="pd-price-block">
-              <span className="pd-price-label">PRECIO</span>
+              <span className="pd-price-label">{t('productDetail.price')}</span>
               <span className="pd-price-amount">
-                ${Number(product.price).toLocaleString('es-CL')}
+                ${Number(product.price).toLocaleString(isEn ? 'en-US' : 'es-CL')}
               </span>
-              <span className="pd-price-currency">CLP</span>
+              <span className="pd-price-currency">{t('productDetail.currency')}</span>
             </div>
             <div className="pd-cta-row">
               <button
                 id={"add-to-cart-" + product.id}
                 className={"pd-btn-add-cart" + (addedState ? " added" : "")}
                 onClick={handleAddToCart}
-                aria-label={"Anadir " + product.name + " al carrito"}
+                aria-label={t('productDetail.addToCart')}
                 disabled={addedState}
               >
-                {addedState ? "ANADIDO AL CARRITO" : "+ AGREGAR AL CARRITO"}
+                {addedState ? t('productDetail.addedToCart') : t('productDetail.addToCart')}
               </button>
               <Link to="/cart" className="pd-btn-go-cart" aria-label="Ir al carrito">
                 &#128722;
@@ -328,7 +332,7 @@ const ProductDetail = () => {
           <div className="pd-auth-strip">
             <span className="pd-auth-icon">&#128737;</span>
             <span className="pd-auth-text">
-              Importación oficial &middot; Figuras y productos de autor coleccionables premium &middot; Envíos a todo el mundo
+              {t('productDetail.authStrip')}
             </span>
           </div>
         </section>
@@ -338,34 +342,38 @@ const ProductDetail = () => {
         <section className="pd-related-section" aria-label="Productos relacionados">
           <div className="pd-related-header">
             <span className="pd-related-live-dot" aria-hidden="true" />
-            <h2 className="pd-related-title">TAMBIEN TE PUEDE INTERESAR</h2>
-            <Link to="/catalog" className="pd-related-ver-todo">Ver todo &rarr;</Link>
+            <h2 className="pd-related-title">{t('productDetail.relatedTitle')}</h2>
+            <Link to="/catalog" className="pd-related-ver-todo">{t('productDetail.viewAll')}</Link>
           </div>
           <div className="pd-related-grid">
-            {relatedProducts.map((rel) => (
-              <Link
-                key={rel.id}
-                to={"/catalog/" + rel.id}
-                className="pd-related-card"
-                aria-label={"Ver " + rel.name}
-              >
-                <div className="pd-related-img-wrap">
-                  <img
-                    src={rel.image_url}
-                    alt={rel.name}
-                    className="pd-related-img"
-                    loading="lazy"
-                  />
-                  <span className="pd-related-cat">{rel.category}</span>
-                </div>
-                <div className="pd-related-info">
-                  <span className="pd-related-name">{rel.name}</span>
-                  <span className="pd-related-price">
-                    ${Number(rel.price).toLocaleString('es-CL')}
-                  </span>
-                </div>
-              </Link>
-            ))}
+            {relatedProducts.map((rel) => {
+              const relName = (isEn && rel.name_en) ? rel.name_en : rel.name;
+              const relCat = t(`catalog.categories.${rel.category}`, rel.category);
+              return (
+                <Link
+                  key={rel.id}
+                  to={"/catalog/" + rel.id}
+                  className="pd-related-card"
+                  aria-label={relName}
+                >
+                  <div className="pd-related-img-wrap">
+                    <img
+                      src={rel.image_url}
+                      alt={relName}
+                      className="pd-related-img"
+                      loading="lazy"
+                    />
+                    <span className="pd-related-cat">{relCat}</span>
+                  </div>
+                  <div className="pd-related-info">
+                    <span className="pd-related-name">{relName}</span>
+                    <span className="pd-related-price">
+                      ${Number(rel.price).toLocaleString(isEn ? 'en-US' : 'es-CL')}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </section>
       )}

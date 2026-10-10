@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './ProductCard.css';
 
 const ProductCard = ({ product, addToCart }) => {
+  const { t } = useTranslation();
+
   return (
     <div className="product-card">
       <Link to={`/catalog/${product.id}`} className="product-link">
@@ -16,12 +19,14 @@ const ProductCard = ({ product, addToCart }) => {
           {product.image_url_2 && (
             <img
               src={product.image_url_2}
-              alt={`${product.name} — vista alternativa`}
+              alt={`${product.name} — ${t('catalog.viewDetail')}`}
               loading="lazy"
               className="product-img-secondary"
             />
           )}
-          <span className="product-card-category">{product.category}</span>
+          <span className="product-card-category">
+            {t(`catalog.categories.${product.category}`, product.category)}
+          </span>
           {product.tags && product.tags.length > 0 && (
             <span className="product-card-tag">{product.tags[0]}</span>
           )}
@@ -37,7 +42,7 @@ const ProductCard = ({ product, addToCart }) => {
               ))}
             </div>
             <span className="rating-text">
-              {product.rating} ({product.reviews} reviews)
+              {product.rating} ({product.reviews} {t('catalog.reviews')})
             </span>
           </div>
           <div className="product-card-bottom">
@@ -46,7 +51,7 @@ const ProductCard = ({ product, addToCart }) => {
         </div>
       </Link>
       <button className="btn-base btn-primary" onClick={() => addToCart(product)}>
-        Add to Cart
+        {t('catalog.quickAdd')}
       </button>
     </div>
   );

@@ -1,0 +1,141 @@
+{
+  "header": {
+    "subtitle": "Anime Collectibles & Archive Figures",
+    "liveStatus": "EN VIVO",
+    "login": "LOG IN",
+    "logout": "SALIR",
+    "cart": "CART"
+  },
+  "navbar": {
+    "home": "Inicio",
+    "catalog": "Catálogo",
+    "cart": "Carrito",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "hi": "Hola",
+    "loggedAs": "Conectado como",
+    "supportTitle": "Atención al Cliente",
+    "helpCenter": "Centro de Ayuda",
+    "trackOrder": "Rastrea tu Pedido",
+    "followUs": "Síguenos: @onigashima_store"
+  },
+  "hero": {
+    "internationalStore": "// TIENDA INTERNACIONAL",
+    "collectorsEdition": "EDICIÓN DE COLECCIÓN",
+    "titleMain": "Figuras y productos de autor ",
+    "titleAccent": "oficiales premium.",
+    "subtitle": "Importación oficial de figuras y coleccionables exclusivos con envíos a todo el mundo.",
+    "viewCatalog": "Ver Catálogo Completo →",
+    "about": "Acerca de",
+    "shipping": "Envíos & Sellos",
+    "contact": "Contacto",
+    "pause": "PAUSA",
+    "clip": "CLIP",
+    "switchClip": "⇄ CLIP"
+  },
+  "carousel": {
+    "dropsExhibit": "EXHIBICIÓN DROPS 2026",
+    "piecesCount": "[{{count}} PIEZAS]",
+    "batch": "LOTE",
+    "prevBatch": "Lote anterior",
+    "nextBatch": "Lote siguiente",
+    "add": "+ Añadir",
+    "added": "✓ Añadido",
+    "view": "Ver"
+  },
+  "watermark": {
+    "line1": "ONIGASHIMA STORE® // TOKYO • INTERNATIONAL",
+    "line2": "EDICIÓN LIMITADA & ONIGASHIMA STORE 2026"
+  },
+  "panels": {
+    "exclusiveIntel": "// INFORMACIÓN EXCLUSIVA",
+    "exploreCatalog": "Explorar Catálogo Completo →",
+    "aboutTitle": "Acerca de Onigashima",
+    "aboutBody": "Onigashima Store es una tienda internacional de venta de figuras y productos de autor coleccionables y oficiales premium, con envíos a todo el mundo. Garantizamos sellos de autenticidad TOEI, Kotobukiya, Bandai Spirits y Good Smile Company.",
+    "shippingTitle": "Importación & Envíos Globales",
+    "shippingBody": "Empacamos cada pieza con protección de grado coleccionista (cajas dobles de alto impacto y sellado hidrófugo). Envíos exprés a todo el mundo con número de rastreo prioritario y seguro contra daños al 100% del valor declarado.",
+    "contactTitle": "Contacto & Atención",
+    "contactBody": "¿Buscas una figura exclusiva o preventa agotada? Nuestro concierge en Tokio busca piezas por encargo. Escríbenos a concierge@onigashimastore.io o encuéntranos en nuestras redes @onigashima_store."
+  },
+  "catalog": {
+    "headerBadge": "// Onigashima Store 2026",
+    "title": "Nuestro Catálogo en Onigashima Store",
+    "intro": "Tienda internacional de figuras y productos de autor coleccionables oficiales premium con envíos a todo el mundo.",
+    "allCategories": "Todos",
+    "quickAdd": "Añadir al Carrito",
+    "viewDetail": "Ver Detalle",
+    "reviews": "reseñas",
+    "noProducts": "No se encontraron productos en esta categoría.",
+    "categories": {
+      "Libros y Mangas": "Libros y Mangas",
+      "Juegos de Mesa": "Juegos de Mesa",
+      "Anime": "Anime",
+      "Mecha": "Mecha"
+    }
+  },
+  "footer": {
+    "tagline": "Tienda internacional de venta de figuras y productos de autor coleccionables y oficiales premium con envíos a todo el mundo.",
+    "navigation": "Navegación",
+    "support": "Soporte",
+    "legal": "Legal",
+    "home": "Inicio",
+    "catalog": "Catálogo",
+    "cart": "Carrito",
+    "faq": "Preguntas Frecuentes",
+    "shippingReturns": "Envíos y Devoluciones",
+    "contactUs": "Contáctanos",
+    "privacyPolicy": "Política de Privacidad",
+    "termsOfUse": "Términos de Uso",
+    "rights": "All rights reserved.",
+    "productOf": "a product of Atacama Dev"
+  },
+  "productDetail": {
+    "loading": "CARGANDO PRODUCTO...",
+    "notFound": "Pieza No Encontrada",
+    "backToCatalog": "Volver al Catálogo",
+    "back": "← ATRÁS",
+    "breadcrumbHome": "INICIO",
+    "breadcrumbCatalog": "CATÁLOGO",
+    "view01": "Vista 01",
+    "view02": "Vista 02",
+    "globalSatisfaction": "SATISFACCIÓN GLOBAL",
+    "status": "ESTADO",
+    "stockStatus": {
+      "high": "Disponible",
+      "mid": "Stock Limitado",
+      "low": "Últimas Unidades"
+    },
+    "units": "UNIDADES",
+    "availableShort": "disp.",
+    "refId": "ID REF",
+    "price": "PRECIO",
+    "currency": "CLP",
+    "addToCart": "+ AGREGAR AL CARRITO",
+    "addedToCart": "✓ AÑADIDO AL CARRITO",
+    "authStrip": "Importación oficial · Figuras y productos de autor coleccionables premium · Envíos a todo el mundo",
+    "relatedTitle": "TAMBIÉN TE PUEDE INTERESAR",
+    "viewAll": "Ver todo →",
+    "reviewsCount": "{{count}} reseñas"
+  },
+  "cart": {
+    "emptyTitle": "Tu Carrito está Vacío",
+    "emptyDesc": "Parece que aún no has agregado piezas a tu colección de anime.",
+    "discoverTreasures": "Descubrir Colección",
+    "title": "Tu Carrito de Compras",
+    "itemsInBag": "{{count}} piezas en tu bolsa",
+    "orderSummary": "Resumen del Pedido",
+    "subtotal": "Subtotal",
+    "shipping": "Envío",
+    "freeShipping": "GRATIS",
+    "total": "Total",
+    "proceedToCheckout": "Proceder al Pago",
+    "secureCheckout": "Pago Seguro",
+    "continueShopping": "← Seguir Comprando",
+    "removeItem": "Eliminar pieza"
+  },
+  "lang": {
+    "es": "ES",
+    "en": "EN",
+    "toggleLabel": "Cambiar idioma a {{lang}}"
+  }
+}

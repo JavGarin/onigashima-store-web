@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import './Footer.css';
-import githubIcon from '../../assets/img/githubwhite.svg';
 
 gsap.registerPlugin(ScrollToPlugin);
 
 const Footer = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const scrollToTopRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,7 +49,7 @@ const Footer = () => {
   }, [isModalOpen, location.pathname]);
 
   const privacyPolicy = {
-    title: 'Privacy Policy',
+    title: t('footer.privacyPolicy'),
     content: (
       <>
         <p>At Onigashima Store, your privacy is our priority. We collect information to process your orders and improve your experience.</p>
@@ -60,7 +61,7 @@ const Footer = () => {
   };
 
   const termsOfUse = {
-    title: 'Terms of Use',
+    title: t('footer.termsOfUse'),
     content: (
       <>
         <p>Welcome to Onigashi Store. By using our site, you agree to the following conditions:</p>
@@ -126,33 +127,31 @@ const Footer = () => {
                 <span className="footer-logo-sub">ONIGASHIMA STORE 2026 // WORLDWIDE</span>
               </div>
             </div>
-            <p className="footer-tagline">Tienda internacional de venta de figuras y productos de autor coleccionables y oficiales premium con envíos a todo el mundo.</p>
+            <p className="footer-tagline">{t('footer.tagline')}</p>
           </div>
 
-          <FooterColumn id="nav" title="Navigation">
-            <Link to="/">Home</Link>
-            <Link to="/catalog">Catalog</Link>
-            <Link to="/cart">Cart</Link>
+          <FooterColumn id="nav" title={t('footer.navigation')}>
+            <Link to="/">{t('footer.home')}</Link>
+            <Link to="/catalog">{t('footer.catalog')}</Link>
+            <Link to="/cart">{t('footer.cart')}</Link>
           </FooterColumn>
 
-          <FooterColumn id="support" title="Support">
-            <a href="#">FAQ</a>
-            <a href="#">Shipping &amp; Returns</a>
-            <a href="#">Contact Us</a>
+          <FooterColumn id="support" title={t('footer.support')}>
+            <a href="#">{t('footer.faq')}</a>
+            <a href="#">{t('footer.shippingReturns')}</a>
+            <a href="#">{t('footer.contactUs')}</a>
           </FooterColumn>
 
-          <FooterColumn id="legal" title="Legal">
-            <button className="footer-link-btn" onClick={() => openModal(privacyPolicy)}>Privacy Policy</button>
-            <button className="footer-link-btn" onClick={() => openModal(termsOfUse)}>Terms of Use</button>
+          <FooterColumn id="legal" title={t('footer.legal')}>
+            <button className="footer-link-btn" onClick={() => openModal(privacyPolicy)}>{t('footer.privacyPolicy')}</button>
+            <button className="footer-link-btn" onClick={() => openModal(termsOfUse)}>{t('footer.termsOfUse')}</button>
           </FooterColumn>
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Onigashima Store. dev Javier Garin - All rights reserved.</p>
-          <a href="https://github.com/JavGarin/onigashima-store-web" target="_blank" rel="noopener noreferrer" className="github-link-redesigned">
-            <img src={githubIcon} alt="GitHub" />
-            <span>View Project on GitHub</span>
-          </a>
+          <p>
+            &copy; {new Date().getFullYear()} Onigashima Store. dev Javier Garin - <a href="https://atacama-dev.app/" target="_blank" rel="noopener noreferrer" className="footer-atacama-link">{t('footer.productOf')}</a> - {t('footer.rights')}
+          </p>
         </div>
 
         <div ref={scrollToTopRef} className="scroll-to-top" onClick={handleScrollToTop}>

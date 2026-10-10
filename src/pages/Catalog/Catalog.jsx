@@ -3,12 +3,14 @@ import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 // import { supabase } from '../../supabaseClient';
 import { getAllProducts, getAllCategories } from '../../data/mockProducts';
 import { useCart } from '../../context/CartContext';
+import { useTranslation } from 'react-i18next';
 import { gsap } from 'gsap';
 import Spinner from '../../components/Spinner/Spinner';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import './Catalog.css';
 
 const Catalog = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -91,25 +93,30 @@ const Catalog = () => {
     <div className="container-section catalog-section" ref={comp} style={{ position: 'relative' }}>
       <div className="catalog-content" style={{ visibility: loading && !products.length ? 'hidden' : 'visible' }}>
         <div className="catalog-header">
-          <span className="catalog-header-badge">// Onigashima Store 2026</span>
+          <span className="catalog-header-badge">{t('catalog.headerBadge')}</span>
           <div className="catalog-title-wrap">
             <img src="/onigashima_store_logo.avif" alt="Onigashima Store Logo" className="catalog-logo" />
-            <h2>Curated Archive Catalog</h2>
+            <h2>{t('catalog.title')}</h2>
           </div>
         </div>
-        <p className="catalog-intro">Tienda internacional de figuras y productos de autor coleccionables oficiales premium con envíos a todo el mundo.</p>
+        <p className="catalog-intro">{t('catalog.intro')}</p>
         
         {/* Category Filter Bar */}
         <div className="category-filter">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              className={`filter-btn ${selectedCategory === cat ? 'active' : ''}`}
-              onClick={() => setSelectedCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
+          {categories.map(cat => {
+            const isAll = cat === 'All';
+            const label = isAll ? t('catalog.allCategories') : t(`catalog.categories.${cat}`, cat);
+            const isActive = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                className={`filter-btn ${isActive ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(cat)}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
         
         {loading && <Spinner />}
@@ -125,7 +132,7 @@ const Catalog = () => {
             ))}
             {filteredProducts.length === 0 && (
               <div className="no-products-msg">
-                <p>No products found in this category.</p>
+                <p>{t('catalog.noProducts', 'No products found in this category.')}</p>
               </div>
             )}
           </div>

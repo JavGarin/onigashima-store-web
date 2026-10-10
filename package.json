@@ -13,8 +13,11 @@
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/supabase-js": "^2.57.4",
     "gsap": "^3.13.0",
+    "i18next": "^26.4.2",
+    "i18next-browser-languagedetector": "^8.2.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-i18next": "^17.0.16",
     "react-router-dom": "^7.7.1"
   },
   "devDependencies": {

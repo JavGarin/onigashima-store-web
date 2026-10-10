@@ -1,9 +1,12 @@
 import React, { useMemo } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './Cart.css';
 
 const Cart = () => {
+  const { t, i18n } = useTranslation();
+  const isEn = (i18n.resolvedLanguage || i18n.language || 'es').startsWith('en');
   const { cartItems, removeFromCart, updateQuantity } = useCart();
 
   const cartTotal = useMemo(() => {
@@ -14,9 +17,9 @@ const Cart = () => {
     return (
       <div className="container-section cart-empty-view">
         <div className="empty-cart-content">
-          <h2>Your Cart is Empty</h2>
-          <p>Looks like you haven't added any items to your anime collection yet.</p>
-          <Link to="/catalog" className="btn-base btn-primary">Discover Treasures</Link>
+          <h2>{t('cart.emptyTitle')}</h2>
+          <p>{t('cart.emptyDesc')}</p>
+          <Link to="/catalog" className="btn-base btn-primary">{t('cart.discoverTreasures')}</Link>
         </div>
       </div>
     );
@@ -25,69 +28,72 @@ const Cart = () => {
   return (
     <div className="container-section cart-page-section">
       <div className="cart-header">
-        <h2>Your Shopping Cart</h2>
-        <p className="cart-item-count">{cartItems.length} items in your bag</p>
+        <h2>{t('cart.title')}</h2>
+        <p className="cart-item-count">{t('cart.itemsInBag', { count: cartItems.length })}</p>
       </div>
 
       <div className="cart-content-grid">
         <div className="cart-items-column">
-          {cartItems.map(item => (
-            <div key={item.id} className="cart-item-card">
-              <div className="cart-item-image">
-                <img src={item.image_url} alt={item.name} loading="lazy" />
-              </div>
-              <div className="cart-item-info">
-                <div className="cart-item-head">
-                  <h3>{item.name}</h3>
-                  <button onClick={() => removeFromCart(item.id)} className="cart-item-remove-btn" title="Remove item">
-                    &times;
-                  </button>
+          {cartItems.map(item => {
+            const itemName = (isEn && item.name_en) ? item.name_en : item.name;
+            return (
+              <div key={item.id} className="cart-item-card">
+                <div className="cart-item-image">
+                  <img src={item.image_url} alt={itemName} loading="lazy" />
                 </div>
-                <p className="cart-item-unit-price">${item.price}</p>
-                
-                <div className="cart-item-actions">
-                  <div className="quantity-control">
-                    <button onClick={() => updateQuantity(item.id, -1)} aria-label="Decrease quantity">-</button>
-                    <span className="qty-value">{item.quantity}</span>
-                    <button onClick={() => updateQuantity(item.id, 1)} aria-label="Increase quantity">+</button>
+                <div className="cart-item-info">
+                  <div className="cart-item-head">
+                    <h3>{itemName}</h3>
+                    <button onClick={() => removeFromCart(item.id)} className="cart-item-remove-btn" title={t('cart.removeItem')}>
+                      &times;
+                    </button>
                   </div>
-                  <div className="cart-item-subtotal">
-                    <span className="subtotal-label">Subtotal</span>
-                    <span className="subtotal-amount">${(item.price * item.quantity).toFixed(2)}</span>
+                  <p className="cart-item-unit-price">${Number(item.price).toLocaleString(isEn ? 'en-US' : 'es-CL')}</p>
+                  
+                  <div className="cart-item-actions">
+                    <div className="quantity-control">
+                      <button onClick={() => updateQuantity(item.id, -1)} aria-label="Decrease quantity">-</button>
+                      <span className="qty-value">{item.quantity}</span>
+                      <button onClick={() => updateQuantity(item.id, 1)} aria-label="Increase quantity">+</button>
+                    </div>
+                    <div className="cart-item-subtotal">
+                      <span className="subtotal-label">{t('cart.subtotal')}</span>
+                      <span className="subtotal-amount">${Number(item.price * item.quantity).toLocaleString(isEn ? 'en-US' : 'es-CL')}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="cart-summary-column">
           <div className="cart-summary-sticky-wrapper">
             <div className="cart-summary-card">
-              <h3>Order Summary</h3>
+              <h3>{t('cart.orderSummary')}</h3>
               <div className="summary-details">
                 <div className="summary-row">
-                  <span>Subtotal</span>
-                  <span>${cartTotal}</span>
+                  <span>{t('cart.subtotal')}</span>
+                  <span>${Number(cartTotal).toLocaleString(isEn ? 'en-US' : 'es-CL')}</span>
                 </div>
                 <div className="summary-row">
-                  <span>Shipping</span>
-                  <span className="free-shipping">FREE</span>
+                  <span>{t('cart.shipping')}</span>
+                  <span className="free-shipping">{t('cart.freeShipping')}</span>
                 </div>
                 <div className="summary-row total">
-                  <span>Total</span>
-                  <span className="total-amount">${cartTotal}</span>
+                  <span>{t('cart.total')}</span>
+                  <span className="total-amount">${Number(cartTotal).toLocaleString(isEn ? 'en-US' : 'es-CL')}</span>
                 </div>
               </div>
               <Link to="/checkout" className="btn-base btn-primary checkout-btn">
-                Proceed to Checkout
+                {t('cart.proceedToCheckout')}
               </Link>
               <p className="secure-checkout-note">
-                <span className="lock-icon">🔒</span> Secure Checkout
+                <span className="lock-icon">🔒</span> {t('cart.secureCheckout')}
               </p>
             </div>
             <Link to="/catalog" className="continue-shopping-link">
-              &larr; Continue Shopping
+              {t('cart.continueShopping')}
             </Link>
           </div>
         </div>

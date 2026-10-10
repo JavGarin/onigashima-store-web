@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { getFeaturedProducts } from '../../data/mockProducts';
+import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import './Home.css';
 import videoBg from '../../assets/video/FLCL.webm';
 import battle1Bg from '../../assets/video/battle1.webm';
@@ -18,29 +20,15 @@ const Home = () => {
   const { cartCount, addToCart } = useCart();
   const { user } = useAuth();
 
+  // i18n Translation Hook
+  const { t } = useTranslation();
+
   // Floating Panel Drawer State
   const [activePanelKey, setActivePanelKey] = useState(null);
-  const [panelContent, setPanelContent] = useState({ title: '', body: '' });
 
   // Carousel Products & State
   const featuredProducts = getFeaturedProducts(6);
   const [addedItemNotice, setAddedItemNotice] = useState(null);
-
-  // Predefined panel details
-  const panelsData = {
-    about: {
-      title: 'Acerca de Onigashima',
-      body: 'Onigashima Store es una tienda internacional de venta de figuras y productos de autor coleccionables y oficiales premium, con envíos a todo el mundo. Garantizamos sellos de autenticidad TOEI, Kotobukiya, Bandai Spirits y Good Smile Company.'
-    },
-    shipping: {
-      title: 'Importación & Envíos Globales',
-      body: 'Empacamos cada pieza con protección de grado coleccionista (cajas dobles de alto impacto y sellado hidrófugo). Envíos exprés a todo el mundo con número de rastreo prioritario y seguro contra daños al 100% del valor declarado.'
-    },
-    contact: {
-      title: 'Contacto & Atención',
-      body: '¿Buscas una figura exclusiva o preventa agotada? Nuestro concierge en Tokio busca piezas por encargo. Escríbenos a concierge@onigashimastore.io o encuéntranos en nuestras redes @onigashima_store.'
-    }
-  };
 
   const openPanel = (key) => {
     if (activePanelKey === key) {
@@ -48,7 +36,6 @@ const Home = () => {
       return;
     }
     setActivePanelKey(key);
-    setPanelContent(panelsData[key] || { title: '', body: '' });
   };
 
   const closePanel = () => {
@@ -278,19 +265,21 @@ const Home = () => {
                 <img src="/onigashima_store_logo.avif" alt="Onigashima Store Logo" className="brand-logo-img" />
                 <div className="brand-texts">
                   <h1 className="brand-title">ONIGASHIMA STORE</h1>
-                  <h2 className="brand-subtitle">Anime Collectibles & Archive Figures</h2>
+                  <h2 className="brand-subtitle">{t('header.subtitle')}</h2>
                 </div>
               </Link>
             </div>
 
             <div className="header-actions">
+              <LanguageToggle />
+
               {user ? (
                 <span className="user-pill">
                   {user.email.split('@')[0]}
                 </span>
               ) : (
                 <Link to="/login" className="user-login-link">
-                  Log in
+                  {t('header.login')}
                 </Link>
               )}
 
@@ -298,7 +287,7 @@ const Home = () => {
                 <svg className="cart-svg-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M6 6H21L19 13H7.5M20 17H8L6 3H3M9 20.5C9.27614 20.5 9.5 20.2761 9.5 20C9.5 19.7239 9.27614 19.5 9 19.5C8.72386 19.5 8.5 19.7239 8.5 20C8.5 20.2761 8.72386 20.5 9 20.5ZM19 20.5C19.2761 20.5 19.5 20.2761 19.5 20C19.5 19.7239 19.2761 19.5 19 19.5C18.7239 19.5 18.5 19.7239 18.5 20C18.5 20.2761 18.7239 20.5 19 20.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span className="cart-text">Cart</span>
+                <span className="cart-text">{t('header.cart')}</span>
                 {cartCount > 0 && <span className="cart-count-badge">{cartCount}</span>}
               </Link>
             </div>
@@ -309,12 +298,12 @@ const Home = () => {
             <aside className="floating-panel" role="dialog" aria-modal="true">
               <button className="close-btn" onClick={closePanel} aria-label="Cerrar panel">&times;</button>
               <div className="panel-inner">
-                <span className="panel-tag">// INFORMACIÓN EXCLUSIVA</span>
-                <h3 className="panel-heading">{panelContent.title}</h3>
-                <p className="panel-text">{panelContent.body}</p>
+                <span className="panel-tag">{t('panels.exclusiveIntel')}</span>
+                <h3 className="panel-heading">{t(`panels.${activePanelKey}Title`)}</h3>
+                <p className="panel-text">{t(`panels.${activePanelKey}Body`)}</p>
                 <div className="panel-footer-action">
                   <Link to="/catalog" className="btn-base btn-primary">
-                    Explorar Catálogo Completo &rarr;
+                    {t('panels.exploreCatalog')}
                   </Link>
                 </div>
               </div>
@@ -328,7 +317,7 @@ const Home = () => {
               <div className="hero-video-hud" aria-label="Controles del video de fondo">
                 <span className={`video-hud-pulse ${isVideoPlaying ? 'playing' : 'paused'}`} />
                 <span className="video-hud-feed">
-                  {isVideoPlaying ? `CLIP 0${currentVideoIndex + 1}` : 'PAUSA'}
+                  {isVideoPlaying ? `${t('hero.clip')} 0${currentVideoIndex + 1}` : t('hero.pause')}
                 </span>
                 <button 
                   type="button" 
@@ -344,7 +333,7 @@ const Home = () => {
                   className="video-hud-btn video-hud-btn-switch"
                   aria-label="Cambiar siguiente clip de video"
                 >
-                  ⇄ CLIP
+                  {t('hero.switchClip')}
                 </button>
               </div>
 
@@ -376,15 +365,15 @@ const Home = () => {
               <div className="hero-copy-block">
                 <div className="showcase-headline">
                   <div className="headline-meta-row">
-                    <span className="headline-meta">// TIENDA INTERNACIONAL</span>
-                    <span className="headline-badge">EDICIÓN DE COLECCIÓN</span>
+                    <span className="headline-meta">{t('hero.internationalStore')}</span>
+                    <span className="headline-badge">{t('hero.collectorsEdition')}</span>
                   </div>
 
                   <h2 className="headline-title">
-                    Figuras y productos de autor <span className="title-accent">oficiales premium</span>.
+                    {t('hero.titleMain')}<span className="title-accent">{t('hero.titleAccent')}</span>
                   </h2>
                   <p className="headline-subtitle-desc">
-                    Importación oficial de figuras y coleccionables exclusivos con envíos a todo el mundo.
+                    {t('hero.subtitle')}
                   </p>
                 </div>
               </div>
@@ -393,26 +382,26 @@ const Home = () => {
             {/* Barra de Navegación & Acciones Rápidas (Ubicada Arriba del Catálogo) */}
             <nav className="hero-top-nav-bar" aria-label="Navegación principal">
               <Link to="/catalog" className="nav-cta-primary">
-                Ver Catálogo Completo &rarr;
+                {t('hero.viewCatalog')}
               </Link>
               <div className="nav-secondary-links">
                 <button 
                   onClick={() => openPanel('about')}
                   className={`nav-btn ${activePanelKey === 'about' ? 'active' : ''}`}
                 >
-                  Acerca de
+                  {t('hero.about')}
                 </button>
                 <button 
                   onClick={() => openPanel('shipping')}
                   className={`nav-btn ${activePanelKey === 'shipping' ? 'active' : ''}`}
                 >
-                  Envíos & Sellos
+                  {t('hero.shipping')}
                 </button>
                 <button 
                   onClick={() => openPanel('contact')}
                   className={`nav-btn ${activePanelKey === 'contact' ? 'active' : ''}`}
                 >
-                  Contacto
+                  {t('hero.contact')}
                 </button>
               </div>
             </nav>
@@ -449,14 +438,14 @@ const Home = () => {
                   <div className="carousel-top-bar">
                     <div className="carousel-label">
                       <span className="live-indicator" />
-                      <span className="carousel-title-text">EXHIBICIÓN DROPS 2026</span>
-                      <span className="carousel-count-tag">[{featuredProducts.length} PIEZAS]</span>
+                      <span className="carousel-title-text">{t('carousel.dropsExhibit')}</span>
+                      <span className="carousel-count-tag">{t('carousel.piecesCount', { count: featuredProducts.length })}</span>
                     </div>
 
                     {/* HUD Central: Telemetría de Lotes & Timeline Progress */}
                     <div className="carousel-telemetry-hud">
                       <div className="carousel-batch-indicator">
-                        <span className="batch-label">LOTE</span>
+                        <span className="batch-label">{t('carousel.batch')}</span>
                         <span className="batch-numbers">
                           <strong className="batch-current">0{activeBatchIndex + 1}</strong>
                           <span className="batch-sep">/</span>
@@ -497,20 +486,20 @@ const Home = () => {
 
                       <div className="carousel-nav-arrows">
                         <button 
-                          type="button"
+                          type="button" 
                           onClick={prevBatch} 
                           className="carousel-btn prev-btn" 
-                          aria-label="Lote anterior"
-                          title="Lote anterior"
+                          aria-label={t('carousel.prevBatch')}
+                          title={t('carousel.prevBatch')}
                         >
                           &#8592;
                         </button>
                         <button 
-                          type="button"
+                          type="button" 
                           onClick={nextBatch} 
                           className="carousel-btn next-btn" 
-                          aria-label="Lote siguiente"
-                          title="Lote siguiente"
+                          aria-label={t('carousel.nextBatch')}
+                          title={t('carousel.nextBatch')}
                         >
                           &#8594;
                         </button>
@@ -563,10 +552,10 @@ const Home = () => {
                                     onClick={(e) => handleQuickAdd(product, e)}
                                     aria-label={`Añadir ${product.name} al carrito`}
                                   >
-                                    {addedItemNotice === product.id ? '✓ Añadido' : '+ Añadir'}
+                                    {addedItemNotice === product.id ? t('carousel.added') : t('carousel.add')}
                                   </button>
                                   <Link to={`/catalog/${product.id}`} className="btn-view-details">
-                                    Ver
+                                    {t('carousel.view')}
                                   </Link>
                                 </div>
                               </div>
@@ -583,8 +572,8 @@ const Home = () => {
 
           {/* Vértice Inferior: Marca de agua técnica */}
           <div className="frame-watermark">
-            <span>ONIGASHIMA STORE® // TOKYO • SANTIAGO</span>
-            <span className="watermark-sub">EDICIÓN LIMITADA & ONIGASHIMA STORE 2026</span>
+            <span>{t('watermark.line1')}</span>
+            <span className="watermark-sub">{t('watermark.line2')}</span>
           </div>
 
         </div>
