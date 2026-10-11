@@ -4,7 +4,7 @@ Bienvenido a **Onigashima Store**, una aplicación web de comercio electrónico 
 
 ## Captura de Pantalla
 
-![Onigashima Store Screenshot](./src/assets/img/onigashima-store.avif)
+![Onigashima Store Screenshot](./public/screenshot_onigashimastore1.avif)
 
 ## Características Principales
 
