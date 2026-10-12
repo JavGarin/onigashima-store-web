@@ -313,27 +313,46 @@ const Home = () => {
           {/* Área Central: Hero Statement, Logotipo Maestro & Carrusel con Corte Diagonal */}
           <section className="hero-center-showcase">
             <div className="hero-identity-grid">
-              {/* HUD Video Player — Overlay flotante absoluto en esquina superior derecha */}
+              {/* HUD Video Player — Overlay flotante minimalista */}
               <div className="hero-video-hud" aria-label="Controles del video de fondo">
-                <span className={`video-hud-pulse ${isVideoPlaying ? 'playing' : 'paused'}`} />
+                <span 
+                  className={`video-hud-pulse ${isVideoPlaying ? 'playing' : 'paused'}`} 
+                  title={isVideoPlaying ? "Video activo" : "Video pausado"}
+                  aria-hidden="true"
+                />
                 <span className="video-hud-feed">
-                  {isVideoPlaying ? `${t('hero.clip')} 0${currentVideoIndex + 1}` : t('hero.pause')}
+                  {isVideoPlaying ? `0${currentVideoIndex + 1}` : t('hero.pause')}
                 </span>
                 <button 
                   type="button" 
                   onClick={togglePlayVideo}
                   className="video-hud-btn"
                   aria-label={isVideoPlaying ? "Pausar video" : "Reproducir video"}
+                  title={isVideoPlaying ? "Pausar video" : "Reproducir video"}
                 >
-                  {isVideoPlaying ? '❚❚' : '▶'}
+                  {isVideoPlaying ? (
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <rect x="5" y="3" width="4" height="18" rx="1" />
+                      <rect x="15" y="3" width="4" height="18" rx="1" />
+                    </svg>
+                  ) : (
+                    <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <polygon points="6 3 20 12 6 21" />
+                    </svg>
+                  )}
                 </button>
                 <button 
                   type="button" 
                   onClick={cycleVideoClip}
                   className="video-hud-btn video-hud-btn-switch"
                   aria-label="Cambiar siguiente clip de video"
+                  title="Cambiar clip de video"
                 >
-                  {t('hero.switchClip')}
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <polygon points="5 4 15 12 5 20 5 4" fill="currentColor" />
+                    <line x1="19" y1="5" x2="19" y2="19" />
+                  </svg>
+                  <span className="video-hud-btn-text">{t('hero.switchClip')}</span>
                 </button>
               </div>
 
