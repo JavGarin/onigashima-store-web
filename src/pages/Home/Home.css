@@ -486,22 +486,18 @@
   right: 14px;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 8px;
-  background: rgba(10, 10, 16, 0.65);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
+  gap: 8px;
+  padding: 4px 6px;
+  background: transparent;
+  border: none;
   z-index: 15;
   user-select: none;
-  transition: all var(--transition-fast);
+  opacity: 0.55;
+  transition: opacity var(--transition-fast);
 }
 
 .hero-video-hud:hover {
-  background: rgba(10, 10, 16, 0.85);
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  opacity: 1;
 }
 
 .video-hud-info {
@@ -548,32 +544,29 @@
   width: 22px;
   height: 22px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: var(--color-white);
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.85);
   cursor: pointer;
   transition: all var(--transition-fast);
   padding: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .video-hud-btn:hover {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: rgba(255, 255, 255, 0.45);
-  transform: scale(1.05);
+  color: #ffffff;
+  transform: scale(1.15);
 }
 
 .video-hud-btn-switch {
   width: auto;
-  padding: 0 7px;
-  background: rgba(231, 77, 77, 0.14);
-  border-color: rgba(231, 77, 77, 0.35);
-  color: #ffb3b3;
+  padding: 0 4px;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .video-hud-btn-switch:hover {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: #ffffff;
+  color: var(--color-accent);
+  background: transparent;
 }
 
 .video-hud-btn-text {
